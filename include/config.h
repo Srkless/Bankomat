@@ -9,7 +9,7 @@
 #define INCLUDE_CONFIG_H_
 
 
-#define MAX_ATTEMPTS 10
+
 #define USERS_FILE "users.txt"
 #define MAX_LINE 256
 

@@ -36,6 +36,7 @@
 #include "..\include\account.h"
 #include "..\include\security.h"
 #include <stdlib.h>
+#include "..\include\utils.h"
 
 
 /** User stub definition for function: char * fgets(char *__restrict__, int, FILE *__restrict__) */
@@ -377,36 +378,36 @@ EXTERN_C_LINKAGE int CppTest_Stub_scanf (const char * _Format, ...)
 //    return __return;
 //}
 
-/** User stub definition for function: int sscanf(const char *__restrict__, const char *__restrict__, ...) */
-EXTERN_C_LINKAGE int sscanf (const char * _Src, const char * _Format, ...) ;
-EXTERN_C_LINKAGE int CppTest_Stub_sscanf (const char * _Src, const char * _Format, ...) 
-{
-    CPPTEST_STUB_CALLED("sscanf");
-
-    int __return = 0;
-
-    /**
-     * This section enables Dynamic Stub Configuration with Stub Callbacks.
-     *
-     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
-     *
-     * 1. Define stub callback function in test suite file - use the following signature:
-     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, int* __return, const char * _Src, const char * _Format)
-     *
-     * 2. Register stub callback in test case function - use the following code:
-     *     CPPTEST_REGISTER_STUB_CALLBACK("sscanf", &CppTest_StubCallback_SomeName);
-     */
-    if (CPPTEST_STUB_HAS_CALLBACK()) {
-        CPPTEST_STUB_CALLBACK_PARAMS(int* __return, const char * _Src, const char * _Format);
-        CPPTEST_STUB_INVOKE_CALLBACK(&__return, _Src, _Format);
-
-    } else {
-        /* You can put additional stub logic here. */
-
-    }
-
-    return __return;
-}
+///** User stub definition for function: int sscanf(const char *__restrict__, const char *__restrict__, ...) */
+//EXTERN_C_LINKAGE int sscanf (const char * _Src, const char * _Format, ...) ;
+//EXTERN_C_LINKAGE int CppTest_Stub_sscanf (const char * _Src, const char * _Format, ...)
+//{
+//    CPPTEST_STUB_CALLED("sscanf");
+//
+//    int __return = 0;
+//
+//    /**
+//     * This section enables Dynamic Stub Configuration with Stub Callbacks.
+//     *
+//     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
+//     *
+//     * 1. Define stub callback function in test suite file - use the following signature:
+//     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, int* __return, const char * _Src, const char * _Format)
+//     *
+//     * 2. Register stub callback in test case function - use the following code:
+//     *     CPPTEST_REGISTER_STUB_CALLBACK("sscanf", &CppTest_StubCallback_SomeName);
+//     */
+//    if (CPPTEST_STUB_HAS_CALLBACK()) {
+//        CPPTEST_STUB_CALLBACK_PARAMS(int* __return, const char * _Src, const char * _Format);
+//        CPPTEST_STUB_INVOKE_CALLBACK(&__return, _Src, _Format);
+//
+//    } else {
+//        /* You can put additional stub logic here. */
+//
+//    }
+//
+//    return __return;
+//}
 
 /** User stub definition for function: int strcmp(void) */
 EXTERN_C_LINKAGE int strcmp () ;
@@ -743,7 +744,7 @@ EXTERN_C_LINKAGE char* CppTest_Stub_strdup (const char* s)
         CPPTEST_STUB_CALLBACK_PARAMS(char** __return, const char* s);
         CPPTEST_STUB_INVOKE_CALLBACK(&__return, s);
     } else {
-        // default ponašanje možeš simulirati ručno ili pustiti originalni strdup
+        // default ponašanje možeš simulirati ru�?no ili pustiti originalni strdup
         if (s) {
             __return = (char*)malloc(strlen(s) + 1);
             if (__return) {
@@ -755,3 +756,73 @@ EXTERN_C_LINKAGE char* CppTest_Stub_strdup (const char* s)
     return __return;
 }
 
+
+/** User stub definition for function: void * malloc(size_t) */
+EXTERN_C_LINKAGE void * malloc (size_t _Size) ;
+EXTERN_C_LINKAGE void * CppTest_Stub_malloc (size_t _Size) 
+{
+    CPPTEST_STUB_CALLED("malloc");
+
+    void * __return = 0;
+
+    /**
+     * This section enables Dynamic Stub Configuration with Stub Callbacks.
+     *
+     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
+     *
+     * 1. Define stub callback function in test suite file - use the following signature:
+     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, void ** __return, size_t _Size)
+     *
+     * 2. Register stub callback in test case function - use the following code:
+     *     CPPTEST_REGISTER_STUB_CALLBACK("malloc", &CppTest_StubCallback_SomeName);
+     *
+     * 3. Fill out the body of the stub callback function according to intent.
+     * The following line may be used to call original function inside stub callback:
+     *     *__return = malloc(_Size);
+     */
+    if (CPPTEST_STUB_HAS_CALLBACK()) {
+        CPPTEST_STUB_CALLBACK_PARAMS(void ** __return, size_t _Size);
+        CPPTEST_STUB_INVOKE_CALLBACK(&__return, _Size);
+
+    } else {
+        /* You can put additional stub logic here. */
+
+    }
+
+    return __return;
+}
+
+/** User stub definition for function: int getAccountLimit(AccountType) */
+EXTERN_C_LINKAGE int getAccountLimit (AccountType type) ;
+EXTERN_C_LINKAGE int CppTest_Stub_getAccountLimit (AccountType type) 
+{
+    CPPTEST_STUB_CALLED("getAccountLimit");
+
+    int __return = 0;
+
+    /**
+     * This section enables Dynamic Stub Configuration with Stub Callbacks.
+     *
+     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
+     *
+     * 1. Define stub callback function in test suite file - use the following signature:
+     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, int* __return, AccountType type)
+     *
+     * 2. Register stub callback in test case function - use the following code:
+     *     CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_SomeName);
+     *
+     * 3. Fill out the body of the stub callback function according to intent.
+     * The following line may be used to call original function inside stub callback:
+     *     *__return = getAccountLimit(type);
+     */
+    if (CPPTEST_STUB_HAS_CALLBACK()) {
+        CPPTEST_STUB_CALLBACK_PARAMS(int* __return, AccountType type);
+        CPPTEST_STUB_INVOKE_CALLBACK(&__return, type);
+
+    } else {
+        /* You can put additional stub logic here. */
+
+    }
+
+    return __return;
+}

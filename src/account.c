@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../include/account.h"
-
+int MAX_ATTEMPTS = 10;
 
 Status isAccountExists(int accountNumber) {
 	Status result = {0};
@@ -49,11 +49,13 @@ Status generateAccountNumber() {
         attempts++;
     } while (isAccountExists(newNumber).code == STATUS_OK && attempts < MAX_ATTEMPTS);
 
+
     if (attempts == MAX_ATTEMPTS) {
     	result.code = STATUS_MAX_ATTEMPTS_REACHED;
 		strcpy(result.message, "Nemoguce kreirati novi racun.\n");
 		return result;
     }
+
     result.code = STATUS_OK;
     snprintf(result.message, sizeof(result.message), "Uspjesno kreiran broj racuna: %d.\n", newNumber);
 

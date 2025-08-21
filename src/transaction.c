@@ -42,7 +42,6 @@ Status deposit(Account *account, int money) {
 		account->balance += money;
 		result.code = STATUS_OK;
 		Status a = updateAccountInFile(account);
-		printf("%s", a.message);
 		strcpy(result.message, "Uplata na racun uspjesna\n");
 		return result;
 	}
