@@ -57,8 +57,20 @@ void CppTest_StubCallback_registration_fopen_01(CppTest_StubCallInfo* stubCallIn
 	*__return = fp;
 }
 
-
+/**
+ * The test case checks the behavior of the "register" function when the users file cannot be opened.
+ * \field{Test Specification}
+ * 1. Stub fopen to return a NULL (simulate error opening file).
+ * 2. Call register with account number 1234, pin "1234" and account type 1 (Standard).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function register returns STATUS_FILE_ERROR
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
+/* CPPTEST_TEST_CASE_CONTEXT Status* registration(int, char*, int) */
 void UT_auth_registration_TC_01()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_00);
@@ -69,7 +81,20 @@ void UT_auth_registration_TC_01()
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
+/**
+ * The test case checks the behavior of the "register" function when the users file is opened successfully.
+ * \field{Test Specification}
+ * 1. Stub fopen to return a valid file pointer
+ * 2. Call register with account number 1234, pin "1234" and account type 1 (Standard).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function register returns STATUS_OK
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
+/* CPPTEST_TEST_CASE_CONTEXT Status registration(int, char*, int) */
 void UT_auth_registration_TC_02()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_01);

@@ -49,18 +49,49 @@ void UT_security_hashPin_tearDown(void)
 /* CPPTEST_TEST_SUITE_CODE_END TestCaseTearDown */
 }
 
-
+/**
+ * The test case checks the correct behavior of the "hashPin" function when hashing a standard 4-digit PIN code.
+ *
+ * \field{Test Specification}
+ * 1. Define a PIN string: "1234".
+ * 2. Call hashPin with the PIN and the output buffer.
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. The hashPin function computes the hash correctly.
+ * 2. The output buffer contains the expected hash string: "97EF04E6".
+ * 3. The length of the output string is 8 characters and matches the expected value.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
+/* CPPTEST_TEST_CASE_CONTEXT void hashPin(const char*, char*) */
 void UT_security_hashPin_TC_01()
 {
 	char pin[5] = "1234";
-	char hash[65] = "";
+	char hash[65];
 	hashPin(pin, hash);
 	CPPTEST_ASSERT_CSTR_EQUAL("97EF04E6", hash);
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
+/**
+ * The test case checks the correct behavior of the "hashPin" function when hashing a standard 4-digit PIN code.
+ *
+ * \field{Test Specification}
+ * 1. Define a PIN string: "4567".
+ * 2. Call hashPin with the PIN and the output buffer.
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. The hashPin function computes the hash correctly.
+ * 2. The output buffer contains the expected hash string: "842B9454".
+ * 3. The length of the output string is 8 characters and matches the expected value.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
+/* CPPTEST_TEST_CASE_CONTEXT void hashPin(const char*, char*) */
 void UT_security_hashPin_TC_02()
 {
 	char pin[5] = "4567";

@@ -95,7 +95,22 @@ void CppTest_StubCallback_malloc_01(CppTest_StubCallInfo* stubCallInfo, void ** 
 	*__return = malloc(_Size);
 }
 
+
+/**
+ * The test case checks the behavior of the "login" function when the users file cannot be opened.
+ *
+ * \field{Test Specification}
+ * 1. Stub fopen to always return NULL (simulate error opening file).
+ * 2. Call login with an account number (12345) and pin (1234).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function login returns NULL.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
+/* CPPTEST_TEST_CASE_CONTEXT Account* login(int, const char*) */
 void UT_auth_login_TC_01()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_00);
@@ -105,18 +120,52 @@ void UT_auth_login_TC_01()
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
+/**
+ * The test case checks the behavior of the "login" function when the users file is opened successfully but contains no matching account number.
+ *
+ * \field{Test Specification}
+ * 1. Stub fopen to return a valid file pointer.
+ * 2. Stub fgets to return NULL (simulate empty file)
+ * 3. Call login with an account number (12345) and pin (1234).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function login returns NULL.
+ * 2. File is opened and closed correctly.
+ * 3. No account number is matched in the file
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
+/* CPPTEST_TEST_CASE_CONTEXT Account* login(int, const char*) */
 void UT_auth_login_TC_02()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_00);
-		Account* account = login(12345, "1234");
+	Account* account = login(12345, "1234");
 
-		CPPTEST_ASSERT_EQUAL(NULL, account);
+	CPPTEST_ASSERT_EQUAL(NULL, account);
 }
 /* CPPTEST_TEST_CASE_END TC_02 */
 
+/**
+ * The test case checks the behavior of the "login" function when the users file is opened successfully but contains no matching account number.
+ *
+ * \field{Test Specification}
+ * 1. Stub fopen to return a valid file pointer.
+ * 2. Stub fgets to return mock data lines but does not contain a matching account number
+ * 3. Call login with an account number (12345) and pin (1234).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function login returns NULL because no matching account number and PIN are found..
+ * 2. File is opened, read and closed correctly.
+ * 3. No account number is matched in the file
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
+/* CPPTEST_TEST_CASE_CONTEXT Account* login(int, const char*) */
 void UT_auth_login_TC_03()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_01);
@@ -127,7 +176,26 @@ void UT_auth_login_TC_03()
 }
 /* CPPTEST_TEST_CASE_END TC_03 */
 
+/**
+ * The test case checks the behavior of the "login" function when the account exists in the users file but memory allocation for the Account struct fails.
+ *
+ * \field{Test Specification}
+ * 1. Stub fopen to return a valid file pointer (simulate file exists).
+ * 2. Stub fgets to return mock data lines
+ * 3. Stub malloc to always return NULL (simulate memory allocation failure).
+ * 4. Call login with account number 10023349 and pin "1234".
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function login returns NULL because memory allocation failed.
+ * 2. File is opened and closed correctly.
+ * 3. No Account struct is created.
+ * \endfield
+ */
+
 /* CPPTEST_TEST_CASE_BEGIN TC_04 */
+/* CPPTEST_TEST_CASE_CONTEXT Account* login(int, const char*) */
 void UT_auth_login_TC_04()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_01);
@@ -139,14 +207,32 @@ void UT_auth_login_TC_04()
 }
 /* CPPTEST_TEST_CASE_END TC_04 */
 
+/**
+ * The test case checks the behavior of the "login" function when the account exists in the users file and memory allocation succeeds.
+ *
+ * \field{Test Specification}
+ * 1. Stub fopen to return a valid file pointer (simulate file exists).
+ * 2. Stub fgets to return mock data lines sequentially from mock_data containing the target account.
+ * 3. Stub malloc to return a valid pointer (simulate successful memory allocation).
+ * 4. Call login with account number 10023349 and pin "1234".
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function login returns a non-NULL pointer
+ * 2. File is opened, read, and closed correctly.
+ * 3. Account struct contains correct accountNumber
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_05 */
+/* CPPTEST_TEST_CASE_CONTEXT Account* login(int, const char*) */
 void UT_auth_login_TC_05()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_01);
-		CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_01);
-		CPPTEST_REGISTER_STUB_CALLBACK("malloc", &CppTest_StubCallback_malloc_01);
-		Account* account = login(10023349, "1234");
+	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("malloc", &CppTest_StubCallback_malloc_01);
+	Account* account = login(10023349, "1234");
 
-		CPPTEST_ASSERT(account != NULL);
+	CPPTEST_ASSERT(account != NULL);
 }
 /* CPPTEST_TEST_CASE_END TC_05 */

@@ -51,8 +51,21 @@ void UT_utils_getAccountLimit_tearDown(void)
 /* CPPTEST_TEST_SUITE_CODE_END TestCaseTearDown */
 }
 
-
+/**
+ * The test case checks the correct behaviour of the "getAccountLimit" function for a STANDARD account type.
+ *
+ * \field{Test Specification}
+ * 1. Define AccountType as STANDARD.
+ * 2. Call getAccountLimit(type).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function getAccountLimit returns 1000 for STANDARD accounts.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
+/* CPPTEST_TEST_CASE_CONTEXT int getAccountLimit(AccountType) */
 void UT_utils_getAccountLimit_TC_01()
 {
     AccountType type = STANDARD;
@@ -62,7 +75,21 @@ void UT_utils_getAccountLimit_TC_01()
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
+/**
+ * The test case checks the correct behaviour of the "getAccountLimit" function for a PREMIUM account type.
+ *
+ * \field{Test Specification}
+ * 1. Define AccountType as PREMIUM.
+ * 2. Call getAccountLimit(type).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function getAccountLimit returns 5000 for PREMIUM accounts.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
+/* CPPTEST_TEST_CASE_CONTEXT int getAccountLimit(AccountType) */
 void UT_utils_getAccountLimit_TC_02()
 {
 	AccountType type = PREMIUM;
@@ -71,7 +98,21 @@ void UT_utils_getAccountLimit_TC_02()
 }
 /* CPPTEST_TEST_CASE_END TC_02 */
 
+/**
+ * The test case checks the correct behaviour of the "getAccountLimit" function for an invalid/unknown account type.
+ *
+ * \field{Test Specification}
+ * 1. Define AccountType as an invalid value (e.g., 3).
+ * 2. Call getAccountLimit(type).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function getAccountLimit returns -1 for unknown account types.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
+/* CPPTEST_TEST_CASE_CONTEXT int getAccountLimit(AccountType) */
 void UT_utils_getAccountLimit_TC_03()
 {
 	AccountType type = (AccountType) 3;

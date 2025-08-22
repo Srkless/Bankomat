@@ -84,8 +84,21 @@ void CppTest_StubCallback_fgets_01(CppTest_StubCallInfo* stubCallInfo, char ** _
 
 	    *__return = _Buf;
 }
-
+/**
+ * The test case checks the behavior of the "isAccountExists" function when the users file cannot be opened.
+ *
+ * \field{Test Specification}
+ * 1. Stub fopen to always return NULL (simulate error opening file).
+ * 2. Call isAccountExists with an account number (123456).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function isAccountExists returns STATUS_FILE_ERROR.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
+/* CPPTEST_TEST_CASE_CONTEXT Status isAccountExists(int) */
 void UT_account_isAccountExists_TC_01()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_00);
@@ -95,7 +108,23 @@ void UT_account_isAccountExists_TC_01()
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
+/**
+ * The test case checks the behavior of the "isAccountExists" function when the file is opened successfully but contains no matching account number.
+ *
+ * \field{Test Specification}
+ * 1. Stub fopen to return a valid file pointer.
+ * 2. Call isAccountExists with an account number (123456).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function isAccountExists returns STATUS_ACCOUNT_NOT_EXISTS.
+ * 2. File is opened and closed correctly.
+ * 3. No account number is matched in the file.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
+/* CPPTEST_TEST_CASE_CONTEXT Status isAccountExists(int) */
 void UT_account_isAccountExists_TC_02()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_01);
@@ -106,7 +135,24 @@ void UT_account_isAccountExists_TC_02()
 }
 /* CPPTEST_TEST_CASE_END TC_02 */
 
+/**
+ * The test case checks the behavior of the "isAccountExists" function when the file is opened successfully and the account number exists in the file.
+ *
+ * \field{Test Specification}
+ * 1. Stub fopen to return a valid file pointer.
+ * 2. Stub fgets to return mock data lines containing the test account number.
+ * 2. Call isAccountExists with an account number (123).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function isAccountExists returns STATUS_OK.
+ * 2. File is opened, read and closed correctly.
+ * 3. Account number 123 is found in the mock data
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
+/* CPPTEST_TEST_CASE_CONTEXT Status isAccountExists(int) */
 void UT_account_isAccountExists_TC_03()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_01);

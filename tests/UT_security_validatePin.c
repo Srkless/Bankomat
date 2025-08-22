@@ -52,7 +52,23 @@ void UT_security_validatePin_tearDown(void)
 /* CPPTEST_TEST_SUITE_CODE_END TestCaseTearDown */
 }
 
+/**
+ * The test case checks the correct behavior of the "validatePin" function when the provided PIN has invalid length (not exactly 4 digits).
+ *
+ * \field{Test Specification}
+ * 1. Define a temporary PIN string: "123456" (6 characters).
+ * 2. Allocate a pinBuffer of size 5 to store the validated PIN.
+ * 3. Call validatePin with pinBuffer and the temporary PIN.
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function validatePin returns STATUS_PIN_INVALID.
+ * 2. The pinBuffer remains empty (""), since validation failed.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
+/* CPPTEST_TEST_CASE_CONTEXT void validatePin(char*, char* ) */
 void UT_security_validatePin_TC_01()
 {
 	char pinBuffer[5] = {0};
@@ -63,7 +79,23 @@ void UT_security_validatePin_TC_01()
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
+/**
+ * The test case checks the correct behavior of the "validatePin" function when the provided PIN has invalid length (not exactly 4 digits).
+ *
+ * \field{Test Specification}
+ * 1. Define a temporary PIN string: "123" (3 characters).
+ * 2. Allocate a pinBuffer of size 5 to store the validated PIN.
+ * 3. Call validatePin with pinBuffer and the temporary PIN.
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function validatePin returns STATUS_PIN_INVALID.
+ * 2. The pinBuffer remains empty (""), since validation failed.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
+/* CPPTEST_TEST_CASE_CONTEXT void validatePin(char*, char* ) */
 void UT_security_validatePin_TC_02()
 {
 	char pinBuffer[5] = {0};
@@ -74,7 +106,23 @@ void UT_security_validatePin_TC_02()
 }
 /* CPPTEST_TEST_CASE_END TC_02 */
 
+/**
+ * The test case checks the correct behavior of the "validatePin" function when the provided PIN contains non-digit characters.
+ *
+ * \field{Test Specification}
+ * 1. Define a temporary PIN string: "1fg2" (4 characters, but includes non-digit chars).
+ * 2. Allocate a pinBuffer of size 5 to store the validated PIN.
+ * 3. Call validatePin with pinBuffer and the temporary PIN.
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function validatePin returns STATUS_PIN_INVALID.
+ * 2. The pinBuffer remains empty (""), since validation failed.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
+/* CPPTEST_TEST_CASE_CONTEXT void validatePin(char*, char* ) */
 void UT_security_validatePin_TC_03()
 {
 	char pinBuffer[5] = {0};
@@ -85,7 +133,23 @@ void UT_security_validatePin_TC_03()
 }
 /* CPPTEST_TEST_CASE_END TC_03 */
 
+/**
+ * The test case checks the correct behaviour of the "validatePin" function when the provided PIN is valid (exactly 4 digits).
+ *
+ * \field{Test Specification}
+ * 1. Define a temporary PIN string: "1234" (4 digits).
+ * 2. Allocate a pinBuffer of size 5 to store the validated PIN.
+ * 3. Call validatePin with pinBuffer and the temporary PIN.
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function validatePin returns STATUS_OK.
+ * 3. The pinBuffer contains the validated PIN: "1234".
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_04 */
+/* CPPTEST_TEST_CASE_CONTEXT void validatePin(char*, char* ) */
 void UT_security_validatePin_TC_04()
 {
 	char pinBuffer[5] = {0};

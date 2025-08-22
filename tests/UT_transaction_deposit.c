@@ -65,8 +65,23 @@ void CppTest_StubCallback_getAccountLimit_01(CppTest_StubCallInfo* stubCallInfo,
 	*__return = 1000;
 }
 
-
+/**
+ * The test case checks the correct behaviour of the "deposit" function
+ * when the provided Account pointer is NULL.
+ *
+ * \field{Test Specification}
+ * 1. Define account pointer as NULL.
+ * 2. Call deposit(account, 20).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function deposit returns STATUS_ACCOUNT_NOT_EXISTS.
+ * 2. No balance update is performed.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
+/* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_01()
 {
 	Account* account = NULL;
@@ -75,7 +90,23 @@ void UT_transaction_deposit_TC_01()
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
+/**
+ * The test case checks the behaviour of the "deposit" function when the account type is invalid (getAccountLimit returns -1).
+ *
+ * \field{Test Specification}
+ * 1. Stub getAccountLimit to return -1 (invalid account type).
+ * 2. Create an Account struct with balance = 0.
+ * 3. Call deposit(&account, 20).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function deposit returns STATUS_ACCOUNT_TYPE_INVALID.
+ * 2. Account balance remains unchanged.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
+/* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_02()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_00);
@@ -85,7 +116,23 @@ void UT_transaction_deposit_TC_02()
 }
 /* CPPTEST_TEST_CASE_END TC_02 */
 
+/**
+ * The test case checks the behaviour of the "deposit" function when the deposited amount is below the minimum allowed (less than 10).
+ *
+ * \field{Test Specification}
+ * 1. Stub getAccountLimit to return a valid limit (e.g., 1000).
+ * 2. Create an Account struct with balance = 0.
+ * 3. Call deposit(&account, 5).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function deposit returns STATUS_WRONG_VALUE.
+ * 2. Account balance remains unchanged.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
+/* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_03()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_01);
@@ -95,7 +142,23 @@ void UT_transaction_deposit_TC_03()
 }
 /* CPPTEST_TEST_CASE_END TC_03 */
 
+/**
+ * The test case checks the behaviour of the "deposit" function when the deposited amount is not divisible by 10.
+ *
+ * \field{Test Specification}
+ * 1. Stub getAccountLimit to return a valid limit (e.g., 1000).
+ * 2. Create an Account struct with balance = 0.
+ * 3. Call deposit(&account, 15).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function deposit returns STATUS_WRONG_VALUE.
+ * 2. Account balance remains unchanged.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_04 */
+/* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_04()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_01);
@@ -105,7 +168,23 @@ void UT_transaction_deposit_TC_04()
 }
 /* CPPTEST_TEST_CASE_END TC_04 */
 
+/**
+ * The test case checks the behaviour of the "deposit" function when the deposited amount exceeds the account limit.
+ *
+ * \field{Test Specification}
+ * 1. Stub getAccountLimit to return a valid limit (e.g., 1000).
+ * 2. Create an Account struct with balance = 0.
+ * 3. Call deposit(&account, 2000).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function deposit returns STATUS_LIMIT_EXCEEDING.
+ * 2. Account balance remains unchanged.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_05 */
+/* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_05()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_01);
@@ -115,7 +194,23 @@ void UT_transaction_deposit_TC_05()
 }
 /* CPPTEST_TEST_CASE_END TC_05 */
 
+/**
+ * The test case checks the correct behaviour of the "deposit" function when the deposited amount is valid and within the account limit.
+ *
+ * \field{Test Specification}
+ * 1. Stub getAccountLimit to return a valid limit (e.g., 1000).
+ * 2. Create an Account struct with balance = 0.
+ * 3. Call deposit(&account, 50).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function deposit returns STATUS_OK.
+ * 2. Account balance is increased by the deposited amount (0 + 50 = 50).
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_06 */
+/* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_06()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_01);

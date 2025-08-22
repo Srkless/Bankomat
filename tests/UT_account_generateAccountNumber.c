@@ -63,7 +63,23 @@ void CppTest_StubCallback_isAccountExists_01(CppTest_StubCallInfo* stubCallInfo,
 	*__return = status;
 }
 
+/**
+ * The test case checks the correct behavior of the "generateAccountNumber" function in case when the maximum number of attempts (MAX_ATTEMPTS) is reached.
+ *
+ * \field{Test Specification}
+ * 1. Set the global variable MAX_ATTEMPTS = 1 to simulate scenario where only the maximum number of attempts to generate an account number has been reached.
+ * 2. Call the generateAccountNumber function without any stubbing of internal dependencies.
+ * 3. Capture the returned Status result.
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function generateAccountNumber returns status code STATUS_MAX_ATTEMPTS_REACHED.
+ * 2. No account number is generated since the maximum number of attempts has already been consumed.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
+/* CPPTEST_TEST_CASE_CONTEXT Status generateAccountNumber(void) */
 void UT_account_generateAccountNumber_TC_01()
 {
 	{
@@ -74,7 +90,25 @@ void UT_account_generateAccountNumber_TC_01()
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
+/**
+ * The test case checks the correct behavior of the "generateAccountNumber" function in case when the maximum number of attempts to generate a unique account number is reached.
+ *
+ * \field{Test Specification}
+ * 1. Stub the function isAccountExists to always return true (account already exists).
+ * 2. Set the global variable MAX_ATTEMPTS = 10 to allow 10 generation attempts.
+ * 3. Call the generateAccountNumber function.
+ * 4. Capture the returned Status result.
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function generateAccountNumber returns status code STATUS_MAX_ATTEMPTS_REACHED.
+ * 2. Function isAccountExists is called exactly 10 times (once for each attempt).
+ * 3. No valid account number is generated since all attempts fail.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
+/* CPPTEST_TEST_CASE_CONTEXT Status generateAccountNumber(void) */
 void UT_account_generateAccountNumber_TC_02()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("isAccountExists", &CppTest_StubCallback_isAccountExists_01);
@@ -86,7 +120,25 @@ void UT_account_generateAccountNumber_TC_02()
 }
 /* CPPTEST_TEST_CASE_END TC_02 */
 
+/**
+ * The test case checks the correct behavior of the "generateAccountNumber" function when a unique account number is successfully generated before reaching the maximum number of attempts.
+ *
+ * \field{Test Specification}
+ * 1. Stub the function isAccountExists to always return false (account does not exist).
+ * 2. Set the global variable MAX_ATTEMPTS = 10 to allow 10 generation attempts.
+ * 3. Call the generateAccountNumber function.
+ * 4. Capture the returned Status result.
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function generateAccountNumber returns status code STATUS_OK.
+ * 2. Function isAccountExists is called once, because the generated account number is valid immediately.
+ * 3. A valid account number is produced and stored.
+ * \endfield
+ */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
+/* CPPTEST_TEST_CASE_CONTEXT Status generateAccountNumber(void) */
 void UT_account_generateAccountNumber_TC_03()
 {
 	CPPTEST_REGISTER_STUB_CALLBACK("isAccountExists", &CppTest_StubCallback_isAccountExists_00);
