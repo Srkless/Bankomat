@@ -8,7 +8,7 @@
 #include "../include/utils.h"
 #include <stdlib.h>
 
-
+// Vraca limit za korisnicni nalog
 int getAccountLimit(AccountType type){
 	switch(type){
 	case STANDARD:
