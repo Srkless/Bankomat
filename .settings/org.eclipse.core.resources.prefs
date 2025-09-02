@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//src/account.c=UTF-8
+encoding//src/auth.c=UTF-8
+encoding//src/main.c=UTF-8
+encoding//src/utils.c=UTF-8
+encoding//stubs/BankomatApp_stubs.c=UTF-8
+encoding//tests/UT_auth_registration.c=UTF-8
+encoding//tests/UT_utils_updateAccountInFile.c=UTF-8
