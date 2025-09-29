@@ -44,7 +44,6 @@ Account* login(int accountNumber, const char pinCode[5]) {
     char computed[65];
     hashPin(pinCode, computed);
 
-
     FILE* fp = fopen(USERS_FILE, "r");
     if (!fp) return NULL;
 

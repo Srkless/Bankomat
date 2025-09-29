@@ -12,6 +12,6 @@
 #include "status.h"
 
 Status isAccountExists(int accountNumber);
-Status generateAccountNumber();
+int generateAccountNumber(Status* status);
 
 #endif /* ACCOUNT_H_ */

@@ -378,36 +378,7 @@ EXTERN_C_LINKAGE int CppTest_Stub_scanf (const char * _Format, ...)
 //    return __return;
 //}
 
-///** User stub definition for function: int sscanf(const char *__restrict__, const char *__restrict__, ...) */
-//EXTERN_C_LINKAGE int sscanf (const char * _Src, const char * _Format, ...) ;
-//EXTERN_C_LINKAGE int CppTest_Stub_sscanf (const char * _Src, const char * _Format, ...)
-//{
-//    CPPTEST_STUB_CALLED("sscanf");
-//
-//    int __return = 0;
-//
-//    /**
-//     * This section enables Dynamic Stub Configuration with Stub Callbacks.
-//     *
-//     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
-//     *
-//     * 1. Define stub callback function in test suite file - use the following signature:
-//     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, int* __return, const char * _Src, const char * _Format)
-//     *
-//     * 2. Register stub callback in test case function - use the following code:
-//     *     CPPTEST_REGISTER_STUB_CALLBACK("sscanf", &CppTest_StubCallback_SomeName);
-//     */
-//    if (CPPTEST_STUB_HAS_CALLBACK()) {
-//        CPPTEST_STUB_CALLBACK_PARAMS(int* __return, const char * _Src, const char * _Format);
-//        CPPTEST_STUB_INVOKE_CALLBACK(&__return, _Src, _Format);
-//
-//    } else {
-//        /* You can put additional stub logic here. */
-//
-//    }
-//
-//    return __return;
-//}
+
 
 /** User stub definition for function: int strcmp(void) */
 EXTERN_C_LINKAGE int strcmp () ;
@@ -544,43 +515,6 @@ EXTERN_C_LINKAGE void CppTest_Stub_perror (const char * _ErrMsg)
 
     }
 
-}
-
-/** User stub definition for function: Status generateAccountNumber(void) */
-EXTERN_C_LINKAGE Status generateAccountNumber () ;
-EXTERN_C_LINKAGE Status CppTest_Stub_generateAccountNumber (void) 
-{
-    CPPTEST_STUB_CALLED("generateAccountNumber");
-
-    static Status _MT_svar1;    
-
-    Status __return = _MT_svar1;
-
-    /**
-     * This section enables Dynamic Stub Configuration with Stub Callbacks.
-     *
-     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
-     *
-     * 1. Define stub callback function in test suite file - use the following signature:
-     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, Status* __return)
-     *
-     * 2. Register stub callback in test case function - use the following code:
-     *     CPPTEST_REGISTER_STUB_CALLBACK("generateAccountNumber", &CppTest_StubCallback_SomeName);
-     *
-     * 3. Fill out the body of the stub callback function according to intent.
-     * The following line may be used to call original function inside stub callback:
-     *     *__return = generateAccountNumber();
-     */
-    if (CPPTEST_STUB_HAS_CALLBACK()) {
-        CPPTEST_STUB_CALLBACK_PARAMS(Status* __return);
-        CPPTEST_STUB_INVOKE_CALLBACK(&__return);
-
-    } else {
-        /* You can put additional stub logic here. */
-
-    }
-
-    return __return;
 }
 
 /** User stub definition for function: Status isAccountExists(int) */
@@ -744,7 +678,7 @@ EXTERN_C_LINKAGE char* CppTest_Stub_strdup (const char* s)
         CPPTEST_STUB_CALLBACK_PARAMS(char** __return, const char* s);
         CPPTEST_STUB_INVOKE_CALLBACK(&__return, s);
     } else {
-        // default ponašanje možeš simulirati ru�?no ili pustiti originalni strdup
+        // default ponašanje možeš simulirati ru�?no ili pustiti originalni strdup
         if (s) {
             __return = (char*)malloc(strlen(s) + 1);
             if (__return) {
@@ -818,6 +752,147 @@ EXTERN_C_LINKAGE int CppTest_Stub_getAccountLimit (AccountType type)
     if (CPPTEST_STUB_HAS_CALLBACK()) {
         CPPTEST_STUB_CALLBACK_PARAMS(int* __return, AccountType type);
         CPPTEST_STUB_INVOKE_CALLBACK(&__return, type);
+
+    } else {
+        /* You can put additional stub logic here. */
+
+    }
+
+    return __return;
+}
+
+/** User stub definition for function: int generateAccountNumber(Status *) */
+EXTERN_C_LINKAGE int generateAccountNumber (Status * status) ;
+EXTERN_C_LINKAGE int CppTest_Stub_generateAccountNumber (Status * status) 
+{
+    CPPTEST_STUB_CALLED("generateAccountNumber");
+
+    int __return = 0;
+
+    /**
+     * This section enables Dynamic Stub Configuration with Stub Callbacks.
+     *
+     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
+     *
+     * 1. Define stub callback function in test suite file - use the following signature:
+     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, int* __return, Status * status)
+     *
+     * 2. Register stub callback in test case function - use the following code:
+     *     CPPTEST_REGISTER_STUB_CALLBACK("generateAccountNumber", &CppTest_StubCallback_SomeName);
+     *
+     * 3. Fill out the body of the stub callback function according to intent.
+     * The following line may be used to call original function inside stub callback:
+     *     *__return = generateAccountNumber(status);
+     */
+    if (CPPTEST_STUB_HAS_CALLBACK()) {
+        CPPTEST_STUB_CALLBACK_PARAMS(int* __return, Status * status);
+        CPPTEST_STUB_INVOKE_CALLBACK(&__return, status);
+
+    } else {
+        /* You can put additional stub logic here. */
+
+    }
+
+    return __return;
+}
+
+/** User stub definition for function: int atoi(void) */
+EXTERN_C_LINKAGE int atoi () ;
+EXTERN_C_LINKAGE int CppTest_Stub_atoi (void) 
+{
+    CPPTEST_STUB_CALLED("atoi");
+
+    int __return = 0;
+
+    /**
+     * This section enables Dynamic Stub Configuration with Stub Callbacks.
+     *
+     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
+     *
+     * 1. Define stub callback function in test suite file - use the following signature:
+     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, int* __return)
+     *
+     * 2. Register stub callback in test case function - use the following code:
+     *     CPPTEST_REGISTER_STUB_CALLBACK("atoi", &CppTest_StubCallback_SomeName);
+     *
+     * 3. Fill out the body of the stub callback function according to intent.
+     * The following line may be used to call original function inside stub callback:
+     *     *__return = atoi();
+     */
+    if (CPPTEST_STUB_HAS_CALLBACK()) {
+        CPPTEST_STUB_CALLBACK_PARAMS(int* __return);
+        CPPTEST_STUB_INVOKE_CALLBACK(&__return);
+
+    } else {
+        /* You can put additional stub logic here. */
+
+    }
+
+    return __return;
+}
+
+
+/** User stub definition for function: void hashPin (const char*, char *) */
+EXTERN_C_LINKAGE void hashPin (const char*, char *) ;
+EXTERN_C_LINKAGE void CppTest_Stub_hashPin (const char* pin, char *output)
+{
+    CPPTEST_STUB_CALLED("hashPin");
+
+
+    /**
+     * This section enables Dynamic Stub Configuration with Stub Callbacks.
+     *
+     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
+     *
+     * 1. Define stub callback function in test suite file - use the following signature:
+     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, int* __return)
+     *
+     * 2. Register stub callback in test case function - use the following code:
+     *     CPPTEST_REGISTER_STUB_CALLBACK("hashPin", &CppTest_StubCallback_SomeName);
+     *
+     * 3. Fill out the body of the stub callback function according to intent.
+     * The following line may be used to call original function inside stub callback:
+     *     *__return = hashPin();
+     */
+    if (CPPTEST_STUB_HAS_CALLBACK()) {
+        CPPTEST_STUB_CALLBACK_PARAMS(const char *pin, char *output);
+        CPPTEST_STUB_INVOKE_CALLBACK(pin, output);
+
+    } else {
+        /* You can put additional stub logic here. */
+
+    }
+
+}
+
+/** User stub definition for function: Status updateAccountInFile(Account *) */
+EXTERN_C_LINKAGE Status updateAccountInFile (Account * account) ;
+EXTERN_C_LINKAGE Status CppTest_Stub_updateAccountInFile (Account * account) 
+{
+    CPPTEST_STUB_CALLED("updateAccountInFile");
+
+    static Status _MT_svar1;    
+
+    Status __return = _MT_svar1;
+
+    /**
+     * This section enables Dynamic Stub Configuration with Stub Callbacks.
+     *
+     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
+     *
+     * 1. Define stub callback function in test suite file - use the following signature:
+     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, Status* __return, Account * account)
+     *
+     * 2. Register stub callback in test case function - use the following code:
+     *     CPPTEST_REGISTER_STUB_CALLBACK("updateAccountInFile", &CppTest_StubCallback_SomeName);
+     *
+     * 3. Fill out the body of the stub callback function according to intent.
+     * The following line may be used to call original function inside stub callback:
+     *     *__return = updateAccountInFile(account);
+     */
+    if (CPPTEST_STUB_HAS_CALLBACK()) {
+        CPPTEST_STUB_CALLBACK_PARAMS(Status* __return, Account * account);
+        CPPTEST_STUB_INVOKE_CALLBACK(&__return, account);
 
     } else {
         /* You can put additional stub logic here. */

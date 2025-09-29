@@ -14,11 +14,13 @@ CPPTEST_TEST_SUITE(UT_auth_registration);
         CPPTEST_TEST_SUITE_TEARDOWN(UT_auth_registration_testSuiteTearDown);
 CPPTEST_TEST(UT_auth_registration_TC_01);
 CPPTEST_TEST(UT_auth_registration_TC_02);
+CPPTEST_TEST(UT_auth_registration_TC_03);
 CPPTEST_TEST_SUITE_END();
         
 
 void UT_auth_registration_TC_01(void);
 void UT_auth_registration_TC_02(void);
+void UT_auth_registration_TC_03(void);
 CPPTEST_TEST_SUITE_REGISTRATION(UT_auth_registration);
 
 void UT_auth_registration_testSuiteSetUp(void);
@@ -48,10 +50,15 @@ void UT_auth_registration_tearDown(void)
 /* CPPTEST_TEST_SUITE_CODE_BEGIN TestCaseTearDown */
 /* CPPTEST_TEST_SUITE_CODE_END TestCaseTearDown */
 }
+
 void CppTest_StubCallback_registration_fopen_00(CppTest_StubCallInfo* stubCallInfo, FILE ** __return, const char * _Filename, const char * _Mode){
+	CPPTEST_ASSERT_EQUAL("users.txt", _Filename);
+	CPPTEST_ASSERT_EQUAL("a", _Mode);
 	*__return = NULL;
 }
 void CppTest_StubCallback_registration_fopen_01(CppTest_StubCallInfo* stubCallInfo, FILE ** __return, const char * _Filename, const char * _Mode){
+	CPPTEST_ASSERT_EQUAL("users.txt", _Filename);
+	CPPTEST_ASSERT_EQUAL("a", _Mode);
 	FILE f = {._cnt = 1};
 	FILE *fp = &f;
 	*__return = fp;
@@ -61,46 +68,90 @@ void CppTest_StubCallback_registration_fopen_01(CppTest_StubCallInfo* stubCallIn
  * The test case checks the behavior of the "register" function when the users file cannot be opened.
  * \field{Test Specification}
  * 1. Stub fopen to return a NULL (simulate error opening file).
- * 2. Call register with account number 1234, pin "1234" and account type 1 (Standard).
+ * 2. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
+ * 3. Call register with account number 1234, pin "1234" and account type 1 (Standard).
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
  * 1. Function register returns STATUS_FILE_ERROR
+ * 2. hashPin is called with the correct input PIN code.
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
 /* CPPTEST_TEST_CASE_CONTEXT Status* registration(int, char*, int) */
 void UT_auth_registration_TC_01()
 {
+	CPPTEST_EXPECT_NCALLS("fopen", 1);
+	CPPTEST_EXPECT_NCALLS("hashPin", 0);
+	CPPTEST_EXPECT_NCALLS("fclose", 0);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_00);
 	Status result = registration(1234, "1234", 1);
 
 	CPPTEST_ASSERT_EQUAL(STATUS_FILE_ERROR, result.code);
 	CPPTEST_ASSERT_CSTR_EQUAL("Greska pri citanju iz fajla.\n", result.message);
 }
+
+
+
 /* CPPTEST_TEST_CASE_END TC_01 */
 
 /**
  * The test case checks the behavior of the "register" function when the users file is opened successfully.
  * \field{Test Specification}
  * 1. Stub fopen to return a valid file pointer
- * 2. Call register with account number 1234, pin "1234" and account type 1 (Standard).
+ * 2. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
+ * 3. Call register with account number 1234, pin "1234" and account type 1 (Standard).
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
  * 1. Function register returns STATUS_OK
+ * 2. hashPin is called with the correct input PIN code.
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
 /* CPPTEST_TEST_CASE_CONTEXT Status registration(int, char*, int) */
 void UT_auth_registration_TC_02()
 {
+	CPPTEST_EXPECT_NCALLS("fopen", 1);
+	CPPTEST_EXPECT_NCALLS("hashPin", 1);
+	CPPTEST_EXPECT_NCALLS("fclose", 1);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("hashPin", &CppTest_StubCallback_hashPin_00);
 	Status result = registration(1234, "1234", 1);
 
 	CPPTEST_ASSERT_EQUAL(STATUS_OK, result.code);
 	CPPTEST_ASSERT_CSTR_EQUAL("Uspjesna registracija korisnika!\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_02 */
+
+/* CPPTEST_TEST_CASE_BEGIN TC_03 */
+/**
+ * The test case checks the behavior of the "register" function when the users file is opened successfully.
+ * \field{Test Specification}
+ * 1. Stub fopen to return a valid file pointer
+ * 2. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
+ * 3. Call register with account number 1234, pin "1234" and account type 2 (Premium).
+ * \endfield
+ *
+ * \field{Expected Results}
+ * Expected result is Passed:
+ * 1. Function register returns STATUS_OK
+ * 2. hashPin is called with the correct input PIN code.
+ * \endfield
+ */
+/* CPPTEST_TEST_CASE_CONTEXT Status registration(int, char*, int) */
+void UT_auth_registration_TC_03()
+{
+	CPPTEST_EXPECT_NCALLS("fopen", 1);
+	CPPTEST_EXPECT_NCALLS("hashPin", 1);
+	CPPTEST_EXPECT_NCALLS("fclose", 1);
+	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("hashPin", &CppTest_StubCallback_hashPin_00);
+	Status result = registration(1234, "1234", 2);
+
+	CPPTEST_ASSERT_EQUAL(STATUS_OK, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Uspjesna registracija korisnika!\n", result.message);
+}
+/* CPPTEST_TEST_CASE_END TC_03 */

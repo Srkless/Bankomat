@@ -40,7 +40,7 @@ Status updateAccountInFile(Account *account) {
     int count = 0;
     char buffer[256];
     int oldBalance = -1;   // zapamti staru vrijednost balansa
-    int balanceUpdated = 0; // TODO: napraviti da se ovaj balanceUpadted provjerava tako sto ce se stubovat strcmp i snprintf na line 58
+    int balanceUpdated = 0;
 
     char accNumStr[20];
     sprintf(accNumStr, "%d", account->accountNumber);

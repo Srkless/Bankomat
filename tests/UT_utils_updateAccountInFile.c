@@ -69,17 +69,38 @@ void UT_utils_updateAccountInFile_tearDown(void)
 /* CPPTEST_TEST_SUITE_CODE_END TestCaseTearDown */
 }
 
-void CppTest_StubCallback_fopen_00(CppTest_StubCallInfo* stubCallInfo, FILE ** __return, const char * _Filename, const char * _Mode){
+void CppTest_StubCallback_updateAccountInFile_fopen_00(CppTest_StubCallInfo* stubCallInfo, FILE ** __return, const char * _Filename, const char * _Mode){
+	CPPTEST_ASSERT_EQUAL("users.txt", _Filename);
+	CPPTEST_ASSERT_EQUAL("r", _Mode);
 	*__return = NULL;
 }
 
-void CppTest_StubCallback_fopen_01(CppTest_StubCallInfo* stubCallInfo, FILE ** __return, const char * _Filename, const char * _Mode){
+void CppTest_StubCallback_updateAccountInFile_fopen_01(CppTest_StubCallInfo* stubCallInfo, FILE ** __return, const char * _Filename, const char * _Mode){
+	 static int fopen_call_count = 0;
+	    fopen_call_count++;
+
+	    if (fopen_call_count == 1) {
+	        CPPTEST_ASSERT_EQUAL("users.txt", _Filename);
+	        CPPTEST_ASSERT_EQUAL("r", _Mode);
+	    } else if (fopen_call_count == 2) {
+	        CPPTEST_ASSERT_EQUAL("users.txt", _Filename);
+	        CPPTEST_ASSERT_EQUAL("w", _Mode);
+	    }
 	FILE f = {._cnt = 1};
 	FILE *fp = &f;
 	*__return = fp;
 }
 
-void CppTest_StubCallback_fopen_02(CppTest_StubCallInfo* stubCallInfo, FILE ** __return, const char * _Filename, const char * _Mode){
+void CppTest_StubCallback_updateAccountInFile_fopen_02(CppTest_StubCallInfo* stubCallInfo, FILE ** __return, const char * _Filename, const char * _Mode){
+	static int fopen_call_count = 0;
+	fopen_call_count++;
+	if (fopen_call_count == 1) {
+		CPPTEST_ASSERT_EQUAL("users.txt", _Filename);
+		CPPTEST_ASSERT_EQUAL("r", _Mode);
+	} else if (fopen_call_count == 2) {
+		CPPTEST_ASSERT_EQUAL("users.txt", _Filename);
+		CPPTEST_ASSERT_EQUAL("w", _Mode);
+	}
 	FILE f = {._cnt = 1};
 	FILE *fp = &f;
 	if(strcmp(_Mode, "r")==0){
@@ -90,11 +111,11 @@ void CppTest_StubCallback_fopen_02(CppTest_StubCallInfo* stubCallInfo, FILE ** _
 	}
 }
 
-void CppTest_StubCallback_fgets_00(CppTest_StubCallInfo* stubCallInfo, char ** __return, char * _Buf, int _MaxCount, FILE * _File){
+void CppTest_StubCallback_updateAccountInFile_fgets_00(CppTest_StubCallInfo* stubCallInfo, char ** __return, char * _Buf, int _MaxCount, FILE * _File){
 	*__return = 0;
 }
 
-void CppTest_StubCallback_fgets_01(CppTest_StubCallInfo* stubCallInfo, char ** __return, char * _Buf, int _MaxCount, FILE * _File){
+void CppTest_StubCallback_updateAccountInFile_fgets_01(CppTest_StubCallInfo* stubCallInfo, char ** __return, char * _Buf, int _MaxCount, FILE * _File){
 	if (mock_data[mock_index] == NULL) {
 	        *__return = NULL;
 	        return;
@@ -157,6 +178,7 @@ void UT_utils_updateAccountInFile_TC_01()
 	Status result = updateAccountInFile(account);
 
 	CPPTEST_ASSERT_EQUAL(STATUS_ACCOUNT_NOT_EXISTS, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Account ne postoji\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
@@ -178,7 +200,8 @@ void UT_utils_updateAccountInFile_TC_01()
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
 void UT_utils_updateAccountInFile_TC_02()
 {
-	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_00);
+	CPPTEST_EXPECT_NCALLS("fopen", 1);
+	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_00);
 	Account account = {
 				.accountNumber = 1234,
 				.pinHash = "1234",
@@ -187,6 +210,7 @@ void UT_utils_updateAccountInFile_TC_02()
 		};
 	Status result = updateAccountInFile(&account);
 	CPPTEST_ASSERT_EQUAL(STATUS_FILE_ERROR, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Greska pri citanju iz fajla.\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_02 */
 
@@ -209,8 +233,10 @@ void UT_utils_updateAccountInFile_TC_02()
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
 void UT_utils_updateAccountInFile_TC_03()
 {
-	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_01);
-	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_00);
+	CPPTEST_EXPECT_NCALLS("fopen", 2);
+	CPPTEST_EXPECT_NCALLS("fgets", 1);
+	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_00);
 	Account account = {
 				.accountNumber = 1234,
 				.pinHash = "1234",
@@ -219,6 +245,7 @@ void UT_utils_updateAccountInFile_TC_03()
 		};
 	Status result = updateAccountInFile(&account);
 	CPPTEST_ASSERT_EQUAL(STATUS_ACCOUNT_NOT_EXISTS, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Nalog nije pronadjen u fajlu\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_03 */
 
@@ -242,8 +269,12 @@ void UT_utils_updateAccountInFile_TC_03()
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
 void UT_utils_updateAccountInFile_TC_04()
 {
-	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_01);
-	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_01);
+	CPPTEST_EXPECT_NCALLS("fopen", 1);
+	CPPTEST_EXPECT_NCALLS("fgets", 1);
+	CPPTEST_EXPECT_NCALLS("strcmp", 1);
+	CPPTEST_EXPECT_NCALLS("realloc", 1);
+	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("strcmp", &CppTest_StubCallback_strcmp_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("realloc", &CppTest_StubCallback_realloc_00);
 
@@ -255,6 +286,7 @@ void UT_utils_updateAccountInFile_TC_04()
 		};
 	Status result = updateAccountInFile(&account);
 	CPPTEST_ASSERT_EQUAL(STATUS_ERROR, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Greska u realokaciji\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_04 */
 
@@ -279,21 +311,25 @@ void UT_utils_updateAccountInFile_TC_04()
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
 void UT_utils_updateAccountInFile_TC_05()
 {
+	CPPTEST_EXPECT_NCALLS("fopen", 1);
+	CPPTEST_EXPECT_NCALLS("fgets", 1);
+	CPPTEST_EXPECT_NCALLS("strcmp", 1);
+	CPPTEST_EXPECT_NCALLS("realloc", 1);
+	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("strcmp", &CppTest_StubCallback_strcmp_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("realloc", &CppTest_StubCallback_realloc_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("strdup", &CppTest_StubCallback_strdup_00);
 
-		CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_01);
-		CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_01);
-		CPPTEST_REGISTER_STUB_CALLBACK("strcmp", &CppTest_StubCallback_strcmp_01);
-		CPPTEST_REGISTER_STUB_CALLBACK("realloc", &CppTest_StubCallback_realloc_01);
-		CPPTEST_REGISTER_STUB_CALLBACK("strdup", &CppTest_StubCallback_strdup_00);
-
-		Account account = {
-					.accountNumber = 1234,
-					.pinHash = "1234",
-					.type = 1,
-					.balance = 0
-			};
-		Status result = updateAccountInFile(&account);
-		CPPTEST_ASSERT_EQUAL(STATUS_ERROR, result.code);
+	Account account = {
+				.accountNumber = 1234,
+				.pinHash = "1234",
+				.type = 1,
+				.balance = 0
+		};
+	Status result = updateAccountInFile(&account);
+	CPPTEST_ASSERT_EQUAL(STATUS_ERROR, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Greska kod sadrzaja u fajlu\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_05 */
 
@@ -315,8 +351,12 @@ void UT_utils_updateAccountInFile_TC_05()
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
 void UT_utils_updateAccountInFile_TC_06()
 {
-	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_02);
-	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_01);
+	CPPTEST_EXPECT_NCALLS("fopen", 2);
+	CPPTEST_EXPECT_NCALLS("fgets", 3);
+	CPPTEST_EXPECT_NCALLS("strcmp", 2);
+	CPPTEST_EXPECT_NCALLS("realloc", 2);
+	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_02);
+	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("strcmp", &CppTest_StubCallback_strcmp_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("realloc", &CppTest_StubCallback_realloc_01);
 
@@ -328,6 +368,7 @@ void UT_utils_updateAccountInFile_TC_06()
 		};
 	Status result = updateAccountInFile(&account);
 	CPPTEST_ASSERT_EQUAL(STATUS_FILE_ERROR, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Greska pri otvaranju fajla za pisanje\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_06 */
 
@@ -349,9 +390,13 @@ void UT_utils_updateAccountInFile_TC_06()
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
 void UT_utils_updateAccountInFile_TC_07()
 {
+	CPPTEST_EXPECT_NCALLS("fopen", 2);
+	CPPTEST_EXPECT_NCALLS("fgets", 3);
+	CPPTEST_EXPECT_NCALLS("strcmp", 2);
+	CPPTEST_EXPECT_NCALLS("realloc", 2);
 
-	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_01);
-	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("strcmp", &CppTest_StubCallback_strcmp_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("realloc", &CppTest_StubCallback_realloc_01);
 
@@ -363,6 +408,7 @@ void UT_utils_updateAccountInFile_TC_07()
 		};
 	Status result = updateAccountInFile(&account);
 	CPPTEST_ASSERT_EQUAL(STATUS_ACCOUNT_NOT_EXISTS, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Nalog nije pronadjen u fajlu\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_07 */
 
@@ -384,8 +430,14 @@ void UT_utils_updateAccountInFile_TC_07()
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
 void UT_utils_updateAccountInFile_TC_08()
 {
-	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_01);
-	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_01);
+	CPPTEST_EXPECT_NCALLS("fopen", 2);
+	CPPTEST_EXPECT_NCALLS("fgets", 3);
+	CPPTEST_EXPECT_NCALLS("strcmp", 2);
+	CPPTEST_EXPECT_NCALLS("realloc", 2);
+	CPPTEST_EXPECT_NCALLS("strdup", 2);
+
+	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("strcmp", &CppTest_StubCallback_strcmp_00);
 	CPPTEST_REGISTER_STUB_CALLBACK("realloc", &CppTest_StubCallback_realloc_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("strdup", &CppTest_StubCallback_strdup_01);
@@ -398,5 +450,6 @@ void UT_utils_updateAccountInFile_TC_08()
 		};
 	Status result = updateAccountInFile(&account);
 	CPPTEST_ASSERT_EQUAL(STATUS_OK, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Uspjesan update i balance promijenjen\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_08 */

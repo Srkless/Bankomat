@@ -58,11 +58,17 @@ void UT_transaction_deposit_tearDown(void)
 }
 
 void CppTest_StubCallback_getAccountLimit_00(CppTest_StubCallInfo* stubCallInfo, int* __return, AccountType type){
+	CPPTEST_ASSERT_EQUAL(type, STANDARD);
 	*__return = -1;
 }
 
 void CppTest_StubCallback_getAccountLimit_01(CppTest_StubCallInfo* stubCallInfo, int* __return, AccountType type){
+	CPPTEST_ASSERT_EQUAL(type, STANDARD);
 	*__return = 1000;
+}
+void CppTest_StubCallback_updateAccountInFile(CppTest_StubCallInfo* stubCallInfo, Status* __return, Account * account){
+	CPPTEST_ASSERT_EQUAL(account->accountNumber, 1234);
+	__return = STATUS_OK;
 }
 
 /**
@@ -84,9 +90,12 @@ void CppTest_StubCallback_getAccountLimit_01(CppTest_StubCallInfo* stubCallInfo,
 /* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_01()
 {
+	CPPTEST_EXPECT_NCALLS("getAccountLimit", 0);
+	CPPTEST_EXPECT_NCALLS("updateAccountInFile", 0);
 	Account* account = NULL;
     Status result = deposit(account, 20);
     CPPTEST_ASSERT_EQUAL(STATUS_ACCOUNT_NOT_EXISTS, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Account nije pronadjen\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_01 */
 
@@ -109,10 +118,13 @@ void UT_transaction_deposit_TC_01()
 /* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_02()
 {
+	CPPTEST_EXPECT_NCALLS("getAccountLimit", 1);
+	CPPTEST_EXPECT_NCALLS("updateAccountInFile", 0);
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_00);
-	Account account = {.accountNumber = 1234, .balance = 0};
+	Account account = {.accountNumber = 1234, .balance = 0,.type = STANDARD};
 	Status result = deposit(&account, 20);
 	CPPTEST_ASSERT_EQUAL(STATUS_ACCOUNT_TYPE_INVALID, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Account type nije pronadjen\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_02 */
 
@@ -135,10 +147,13 @@ void UT_transaction_deposit_TC_02()
 /* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_03()
 {
+	CPPTEST_EXPECT_NCALLS("getAccountLimit", 1);
+	CPPTEST_EXPECT_NCALLS("updateAccountInFile", 0);
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_01);
-	Account account = {.accountNumber = 1234, .balance = 0};
+	Account account = {.accountNumber = 1234, .balance = 0,.type = STANDARD};
 	Status result = deposit(&account, 5);
 	CPPTEST_ASSERT_EQUAL(STATUS_WRONG_VALUE, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Minimalan unos je 10.\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_03 */
 
@@ -161,10 +176,13 @@ void UT_transaction_deposit_TC_03()
 /* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_04()
 {
+	CPPTEST_EXPECT_NCALLS("getAccountLimit", 1);
+	CPPTEST_EXPECT_NCALLS("updateAccountInFile", 0);
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_01);
-	Account account = {.accountNumber = 1234, .balance = 0};
+	Account account = {.accountNumber = 1234, .balance = 0,.type = STANDARD};
 	Status result = deposit(&account, 15);
 	CPPTEST_ASSERT_EQUAL(STATUS_WRONG_VALUE, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Pogresna vrijednost (mora biti djeljiva sa 10)\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_04 */
 
@@ -187,10 +205,13 @@ void UT_transaction_deposit_TC_04()
 /* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_05()
 {
+	CPPTEST_EXPECT_NCALLS("getAccountLimit", 1);
+	CPPTEST_EXPECT_NCALLS("updateAccountInFile", 0);
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_01);
-	Account account = {.accountNumber = 1234, .balance = 0};
+	Account account = {.accountNumber = 1234, .balance = 0,.type = STANDARD};
 	Status result = deposit(&account, 2000);
 	CPPTEST_ASSERT_EQUAL(STATUS_LIMIT_EXCEEDING, result.code);
+	CPPTEST_ASSERT_CSTR_EQUAL("Prekoracenje limita\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_05 */
 
@@ -199,8 +220,9 @@ void UT_transaction_deposit_TC_05()
  *
  * \field{Test Specification}
  * 1. Stub getAccountLimit to return a valid limit (e.g., 1000).
- * 2. Create an Account struct with balance = 0.
- * 3. Call deposit(&account, 50).
+ * 3. Stub updateAccountInFile validates that the function is called with the expected parameter values.
+ * 4. Create an Account struct with balance = 0.
+ * 5. Call deposit(&account, 50).
  * \endfield
  *
  * \field{Expected Results}
@@ -213,12 +235,16 @@ void UT_transaction_deposit_TC_05()
 /* CPPTEST_TEST_CASE_CONTEXT Status deposit(Account*, int) */
 void UT_transaction_deposit_TC_06()
 {
+	CPPTEST_EXPECT_NCALLS("getAccountLimit", 1);
+	CPPTEST_EXPECT_NCALLS("updateAccountInFile", 1);
 	CPPTEST_REGISTER_STUB_CALLBACK("getAccountLimit", &CppTest_StubCallback_getAccountLimit_01);
+	CPPTEST_REGISTER_STUB_CALLBACK("updateAccountInFile", &CppTest_StubCallback_updateAccountInFile);
 	int accountBalance = 0;
 	int accountDepositMoney = 50;
-	Account account = {.accountNumber = 1234, .balance = accountBalance};
+	Account account = {.accountNumber = 1234, .balance = accountBalance, .type = STANDARD};
 	Status result = deposit(&account, accountDepositMoney);
 	CPPTEST_ASSERT_EQUAL(STATUS_OK, result.code);
 	CPPTEST_ASSERT_EQUAL(account.balance, accountBalance + accountDepositMoney);
+	CPPTEST_ASSERT_CSTR_EQUAL("Uplata na racun uspjesna\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_06 */

@@ -59,12 +59,12 @@ int main(){
 			        }
 
 			    } while (accountTypeOption != 1 && accountTypeOption != 2);
-			    Status gen = generateAccountNumber();
+			    Status gen = {0};
+			    int number = generateAccountNumber(&gen);
 			    printf("%s", gen.message);
 			    fflush(stdout);
-			    int number;
 
-			    if (gen.code == STATUS_OK && sscanf(gen.message, "Uspjesno kreiran broj racuna: %d", &number) == 1) {
+			    if (gen.code == STATUS_OK && number != -1) {
 			    	Status regStatus = registration(number, pin, accountTypeOption);
 			    	printf("%s", regStatus.message);
 			    	fflush(stdout);
