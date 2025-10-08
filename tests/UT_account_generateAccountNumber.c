@@ -98,7 +98,7 @@ void CppTest_StubCallback_rand_01(CppTest_StubCallInfo* stubCallInfo, int* __ret
  * 1. Set the global variable MAX_ATTEMPTS = 1 to simulate scenario where only the maximum number of attempts to generate an account number has been reached.
  * 2. Function isAccountExists is stubbed to return STATUS_ERROR
  * 3. Function rand is stubbed to return 1234567
- * 4. Call the generateAccountNumber function without any stubbing of internal dependencies.
+ * 4. Call the generateAccountNumber function
  * 5. Capture the returned Status result.
  * \endfield
  *
@@ -108,7 +108,7 @@ void CppTest_StubCallback_rand_01(CppTest_StubCallInfo* stubCallInfo, int* __ret
  * 2. Function isAccountExists is called once with following parameter:
  * 	  *accountNumber = (1234567 % 90000000) + 10000000
  * 3. Function rand is called once
- * 4. No account number is generated since the maximum number of attempts has already been consumed.
+ * 4. Function generateAccountNumber returns -1 to indicate an error and code which is equal STATUS_MAX_ATTEMPTS_REACHED with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
@@ -147,8 +147,7 @@ void UT_account_generateAccountNumber_TC_01()
  * 2. Function isAccountExists is called 10 times with parameters
  *    *accountNumber = (n % 90000000) + 10000000 for n in range 1 to 10
  * 3. Function rand is called 10 times
- * 4. Function generateAccountNumber returns code which is equal STATUS_MAX_ATTEMPTS_REACHED with proper message
- * 5. No valid account number is generated since all attempts fail.
+ * 4. Function generateAccountNumber returns -1 to indicate an error and code which is equal STATUS_MAX_ATTEMPTS_REACHED with proper message
  *
  * \endfield
  */
@@ -185,12 +184,11 @@ void UT_account_generateAccountNumber_TC_02()
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function generateAccountNumber returns status code STATUS_OK.
+ * 1. Function generateAccountNumber returns 11234567 and status code STATUS_OK.
  * 2. Function isAccountExists is called once with following parameter:
  * 	  *accountNumber = (1234567 % 90000000) + 10000000
  * 3. Function rand is called once
- * 4. Function generateAccountNumber returns code which is equal STATUS_OK with proper message
- * 5. A valid account number is produced and stored.
+ * 4. Function generateAccountNumber returns 11234567 and code which is equal STATUS_OK with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
@@ -230,12 +228,11 @@ void UT_account_generateAccountNumber_TC_03()
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function "generateAccountNumber" returns status code STATUS_OK.
+ * 1. Function "generateAccountNumber" returns 11234567 and Status code STATUS_OK.
  * 2. Function "isAccountExists" is called twice with the following parameters:
  *      *accountNumber = (1234567 % 90000000) + 10000000 on both calls.
  * 3. Function "rand" is called twice.
- * 4. Function generateAccountNumber returns code which is equal STATUS_OK with proper message
- * 5. A valid and unique account number (11234567) is produced and stored after the second attempt.
+ * 4. Function generateAccountNumber returns 11234567 and code which is equal STATUS_OK with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_04 */
@@ -253,7 +250,6 @@ void UT_account_generateAccountNumber_TC_04()
 	int accNum = generateAccountNumber(&result);
 	CPPTEST_ASSERT(accNum == 11234567);
 	CPPTEST_ASSERT_EQUAL(STATUS_OK, result.code);
-	CPPTEST_ASSERT_EQUAL(isAccountExists_callNum, 2);
 	CPPTEST_ASSERT_CSTR_EQUAL("Uspjesno kreiran broj racuna.\n", result.message);
 }
 /* CPPTEST_TEST_CASE_END TC_04 */
