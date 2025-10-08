@@ -109,13 +109,20 @@ void CppTest_StubCallback_atoi(CppTest_StubCallInfo* stubCallInfo, int* __return
  *
  * \field{Test Specification}
  * 1. Stub fopen to always return NULL (simulate error opening file).
- * 2. Stub fclose (CppTest_StubCallback_fclose) to always return 0, file is closed successfully
- * 3. Call isAccountExists with an account number (123456).
+ * 2. Function fgets is stubbed to return 0.
+ * 3. Function atoi is stubbed to return 0.
+ * 4. Function fclose is stubbed to return 0, file is successfully closed
+ * 5. Function isAccountExists is called with parameter
+ *    *accountNumber = 123456
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function isAccountExists returns STATUS_FILE_ERROR.
+ * 1. Function fopen is called once
+ * 2. Function fgets is not called
+ * 3. Function atoi is not called
+ * 4. Function fclose is not called
+ * 5. Function isAccountExists returns code which is equal STATUS_FILE_ERROR with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
@@ -123,6 +130,9 @@ void CppTest_StubCallback_atoi(CppTest_StubCallInfo* stubCallInfo, int* __return
 void UT_account_isAccountExists_TC_01()
 {
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
+	CPPTEST_EXPECT_NCALLS("fgets", 0);
+	CPPTEST_EXPECT_NCALLS("fclose", 0);
+	CPPTEST_EXPECT_NCALLS("atoi", 0);
 
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_00);
 
@@ -137,18 +147,23 @@ void UT_account_isAccountExists_TC_01()
  * The test case checks the behavior of the "isAccountExists" function when the file is opened successfully but contains no matching account number.
  *
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer.
- * 2. Stub fgets (CppTest_StubCallback_fgets_00) to immediately return NULL, simulate an empty file
- * 2. Call isAccountExists with an account number (123456).
+ * 1. Function fopen is stubbed to return a valid file pointer.
+ * 2. Function fgets to return NULL, simulate an empty file
+ * 3. Function atoi is stubbed to return 0.
+ * 4. Function fclose is stubbed to return 0, file is successfully closed
+ * 5. Function isAccountExists is called with parameter
+ *    *accountNumber = 123456
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function isAccountExists returns STATUS_ACCOUNT_NOT_EXISTS.
- * 2. File is opened and closed correctly.
- * 3. fgets is called once but returns no data (NULL).
- * 4. fclose is called once and returns 0 (success).
- * 5. No account number is matched in the file.
+ * 1. File is opened and closed correctly.
+ * 2. Function fopen is called once
+ * 3. Function fgets is called once
+ * 4. Function atoi is not called
+ * 5. Function fclose is called once
+ * 6. Function isAccountExists returns code which is equal STATUS_ACCOUNT_NOT_EXISTS with proper message
+ * 7. No account number is matched in the file.
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
@@ -158,6 +173,7 @@ void UT_account_isAccountExists_TC_02()
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
 	CPPTEST_EXPECT_NCALLS("fgets", 1);
 	CPPTEST_EXPECT_NCALLS("fclose", 1);
+	CPPTEST_EXPECT_NCALLS("atoi", 0);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_00);
 	CPPTEST_REGISTER_STUB_CALLBACK("fclose", &CppTest_StubCallback_fclose);
@@ -173,21 +189,23 @@ void UT_account_isAccountExists_TC_02()
  * The test case checks the behavior of the "isAccountExists" function when the file is opened successfully and the account number exists in the file.
  *
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer.
- * 2. Stub fgets to return mock data lines containing the test account number.
- * 3. Stub atoi (CppTest_StubCallback_atoi) to return the predefined value (atoi_next_value).
- * 4. Stub fclose (CppTest_StubCallback_fclose) to always return 0, file is successfully closed
- * 2. Call isAccountExists with an account number (123).
+ * 1. Function fopen is stubbed to return a valid file pointer.
+ * 2. Function fgets is stubbed to return mock data lines containing the test account number.
+ * 3. Function atoi is stubbed to return the predefined value (atoi_next_value).
+ * 4. Function fclose is stubbed to return 0, file is successfully closed
+  * 5. Function isAccountExists is called with parameter
+ *    *accountNumber = 123
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function isAccountExists returns STATUS_OK.
- * 2. File is opened, read and closed correctly.
- * 3. fgets is called once and returns a line containing account number 123.
- * 4. atoi converts the line into 123 (using stubbed return value).
- * 5. fclose is called once and returns 0 (success).
- * 6. Account number 123 is found in the mock data
+ * 1. File is opened, read and closed correctly.
+ * 2. Function fopen is called once
+ * 3. Function fgets is called once
+ * 4. Function atoi is called once
+ * 5. Function fclose is called once
+ * 6. Function isAccountExists returns code which is equal STATUS_OK with proper message
+ * 7. Account number 123 is found in the mock data
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
@@ -197,6 +215,7 @@ void UT_account_isAccountExists_TC_03()
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
 	CPPTEST_EXPECT_NCALLS("fgets", 1);
 	CPPTEST_EXPECT_NCALLS("fclose", 1);
+	CPPTEST_EXPECT_NCALLS("atoi", 1);
 	atoi_next_value = 123;
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_fgets_01);
