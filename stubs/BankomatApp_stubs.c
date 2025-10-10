@@ -347,36 +347,6 @@ EXTERN_C_LINKAGE int CppTest_Stub_scanf (const char * _Format, ...)
     return __return;
 }
 
-///** User stub definition for function: int sprintf(char *__restrict__, const char *__restrict__, ...) */
-//EXTERN_C_LINKAGE int sprintf (char * _Dest, const char * _Format, ...) ;
-//EXTERN_C_LINKAGE int CppTest_Stub_sprintf (char * _Dest, const char * _Format, ...)
-//{
-//    CPPTEST_STUB_CALLED("sprintf");
-//
-//    int __return = 0;
-//
-//    /**
-//     * This section enables Dynamic Stub Configuration with Stub Callbacks.
-//     *
-//     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
-//     *
-//     * 1. Define stub callback function in test suite file - use the following signature:
-//     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, int* __return, char * _Dest, const char * _Format)
-//     *
-//     * 2. Register stub callback in test case function - use the following code:
-//     *     CPPTEST_REGISTER_STUB_CALLBACK("sprintf", &CppTest_StubCallback_SomeName);
-//     */
-//    if (CPPTEST_STUB_HAS_CALLBACK()) {
-//        CPPTEST_STUB_CALLBACK_PARAMS(int* __return, char * _Dest, const char * _Format);
-//        CPPTEST_STUB_INVOKE_CALLBACK(&__return, _Dest, _Format);
-//
-//    } else {
-//        /* You can put additional stub logic here. */
-//
-//    }
-//
-//    return __return;
-//}
 
 
 
@@ -450,40 +420,6 @@ EXTERN_C_LINKAGE int CppTest_Stub_time (void)
     return __return;
 }
 
-///** User stub definition for function: size_t strlen(const char *) */
-//EXTERN_C_LINKAGE size_t strlen (const char * _Str) ;
-//EXTERN_C_LINKAGE size_t CppTest_Stub_strlen (const char * _Str)
-//{
-//    CPPTEST_STUB_CALLED("strlen");
-//
-//    size_t __return = (unsigned long long)0;
-//
-//    /**
-//     * This section enables Dynamic Stub Configuration with Stub Callbacks.
-//     *
-//     * IMPORTANT: THIS COMMENT BLOCK SHOULD NOT BE DELETED OR MODIFIED
-//     *
-//     * 1. Define stub callback function in test suite file - use the following signature:
-//     *     void CppTest_StubCallback_SomeName(CppTest_StubCallInfo* stubCallInfo, size_t* __return, const char * _Str)
-//     *
-//     * 2. Register stub callback in test case function - use the following code:
-//     *     CPPTEST_REGISTER_STUB_CALLBACK("strlen", &CppTest_StubCallback_SomeName);
-//     *
-//     * 3. Fill out the body of the stub callback function according to intent.
-//     * The following line may be used to call original function inside stub callback:
-//     *     *__return = strlen(_Str);
-//     */
-//    if (CPPTEST_STUB_HAS_CALLBACK()) {
-//        CPPTEST_STUB_CALLBACK_PARAMS(size_t* __return, const char * _Str);
-//        CPPTEST_STUB_INVOKE_CALLBACK(&__return, _Str);
-//
-//    } else {
-//        /* You can put additional stub logic here. */
-//
-//    }
-//
-//    return __return;
-//}
 
 /** User stub definition for function: void perror(const char *) */
 EXTERN_C_LINKAGE void perror (const char * _ErrMsg) ;
@@ -678,7 +614,6 @@ EXTERN_C_LINKAGE char* CppTest_Stub_strdup (const char* s)
         CPPTEST_STUB_CALLBACK_PARAMS(char** __return, const char* s);
         CPPTEST_STUB_INVOKE_CALLBACK(&__return, s);
     } else {
-        // default ponašanje možeš simulirati ru�?no ili pustiti originalni strdup
         if (s) {
             __return = (char*)malloc(strlen(s) + 1);
             if (__return) {
@@ -871,7 +806,7 @@ EXTERN_C_LINKAGE Status CppTest_Stub_updateAccountInFile (Account * account)
 {
     CPPTEST_STUB_CALLED("updateAccountInFile");
 
-    static Status _MT_svar1;    
+    static Status _MT_svar1 = {.code=STATUS_ERROR};
 
     Status __return = _MT_svar1;
 

@@ -104,11 +104,10 @@ void CppTest_StubCallback_rand_01(CppTest_StubCallInfo* stubCallInfo, int* __ret
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function generateAccountNumber returns status code STATUS_MAX_ATTEMPTS_REACHED.
- * 2. Function isAccountExists is called once with following parameter:
+ * 1. Function isAccountExists is called once with following parameter:
  * 	  *accountNumber = (1234567 % 90000000) + 10000000
- * 3. Function rand is called once
- * 4. Function generateAccountNumber returns -1 to indicate an error and code which is equal STATUS_MAX_ATTEMPTS_REACHED with proper message
+ * 2. Function rand is called once
+ * 3. Function generateAccountNumber returns -1 to indicate an error and code which is equal STATUS_MAX_ATTEMPTS_REACHED with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
@@ -143,11 +142,10 @@ void UT_account_generateAccountNumber_TC_01()
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function generateAccountNumber returns status code STATUS_MAX_ATTEMPTS_REACHED.
- * 2. Function isAccountExists is called 10 times with parameters
+ * 1. Function isAccountExists is called 10 times with parameters
  *    *accountNumber = (n % 90000000) + 10000000 for n in range 1 to 10
- * 3. Function rand is called 10 times
- * 4. Function generateAccountNumber returns -1 to indicate an error and code which is equal STATUS_MAX_ATTEMPTS_REACHED with proper message
+ * 2. Function rand is called 10 times
+ * 3. Function generateAccountNumber returns -1 to indicate an error and code which is equal STATUS_MAX_ATTEMPTS_REACHED with proper message
  *
  * \endfield
  */
@@ -184,11 +182,10 @@ void UT_account_generateAccountNumber_TC_02()
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function generateAccountNumber returns 11234567 and status code STATUS_OK.
- * 2. Function isAccountExists is called once with following parameter:
+ * 1. Function isAccountExists is called once with following parameter:
  * 	  *accountNumber = (1234567 % 90000000) + 10000000
- * 3. Function rand is called once
- * 4. Function generateAccountNumber returns 11234567 and code which is equal STATUS_OK with proper message
+ * 2. Function rand is called once
+ * 3. Function generateAccountNumber returns 11234567 and code which is equal STATUS_OK with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
@@ -228,11 +225,10 @@ void UT_account_generateAccountNumber_TC_03()
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function "generateAccountNumber" returns 11234567 and Status code STATUS_OK.
- * 2. Function "isAccountExists" is called twice with the following parameters:
+ * 1. Function "isAccountExists" is called twice with the following parameters:
  *      *accountNumber = (1234567 % 90000000) + 10000000 on both calls.
- * 3. Function "rand" is called twice.
- * 4. Function generateAccountNumber returns 11234567 and code which is equal STATUS_OK with proper message
+ * 2. Function "rand" is called twice.
+ * 3. Function generateAccountNumber returns 11234567 and code which is equal STATUS_OK with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_04 */

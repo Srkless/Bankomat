@@ -101,27 +101,37 @@ void CppTest_StubCallback_malloc_01(CppTest_StubCallInfo* stubCallInfo, void ** 
 	*__return = malloc(_Size);
 }
 
+#ifndef CPPTEST_STUB_HASH_PIN_DEFINED
+#define CPPTEST_STUB_HASH_PIN_DEFINED
 void CppTest_StubCallback_hashPin_00(CppTest_StubCallInfo* stubCallInfo, const char* pinCode, const char* hash){
 	CPPTEST_ASSERT_EQUAL("1234", pinCode);
 	strcpy(hash, "dummyHash");
 }
+#endif
 
 
 /**
  * The test case checks the behavior of the "login" function when the users file cannot be opened.
  *
  * \field{Test Specification}
- * 1. Stub fopen to always return NULL to simulate a file open failure.
- * 2. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
- * 3. Call login with account number 12345 and PIN "1234".
- * 4. Verify that no account is returned since the file cannot be opened.
+ * 1. Function fopen is stubbed to return NULL to simulate a file open failure.
+ * 2. Function fgets is stubbed to return 0
+ * 3. Function malloc is stubbed to return 0
+ * 4. Function hashPin is stubbed to return "dummyHash"
+ * 5. Function fclose is stubbed to return 0
+ * 6. Function login is called with parameters
+ *    *accountNumber = 10023349 and *pinCode = "1234".
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function login returns NULL.
- * 2. hashPin is called with the correct input PIN code.
- * 3. fopen fails to open the file as expected.
+ * 1. File is opened, and closed correctly.
+ * 2. Function fopen is called once
+ * 3. Function fgets is called once
+ * 4. Function hashPin is called once
+ * 5. Function malloc is not called
+ * 6. Function fclose is not called
+ * 7. Function login returns a NULL pointer
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
@@ -131,6 +141,9 @@ void UT_auth_login_TC_01()
 {
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
 	CPPTEST_EXPECT_NCALLS("hashPin", 1);
+	CPPTEST_EXPECT_NCALLS("fgets", 0);
+	CPPTEST_EXPECT_NCALLS("malloc", 0);
+	CPPTEST_EXPECT_NCALLS("fclose", 0);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_login_fopen_00);
 	CPPTEST_REGISTER_STUB_CALLBACK("hashPin", &CppTest_StubCallback_hashPin_00);
 	Account* account = login(12345, "1234");
@@ -143,18 +156,24 @@ void UT_auth_login_TC_01()
  * The test case checks the behavior of the "login" function when the users file is opened successfully but contains no matching account number.
  *
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer.
- * 2. Stub fgets to return NULL (simulate empty file)
- * 3. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
- * 4. Call login with an account number (12345) and pin (1234).
+ * 1. Function fopen is stubbed to return a valid file pointer (simulate file exists).
+ * 2. Function fgets is stubbed to return 0
+ * 3. Function malloc is stubbed to return 0
+ * 4. Function hashPin is stubbed to return "dummyHash"
+ * 5. Function fclose is stubbed to return 0
+ * 6. Function login is called with parameters
+ *    *accountNumber = 10023349 and *pinCode = "1234".
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function login returns NULL.
- * 2. hashPin is called with the correct input PIN code.
- * 3. File is opened and closed correctly.
- * 4. No account number is matched in the file
+ * 1. File is opened, and closed correctly.
+ * 2. Function fopen is called once
+ * 3. Function fgets is called once
+ * 4. Function hashPin is called once
+ * 5. Function malloc is not called
+ * 6. Function fclose is called once
+ * 7. Function login returns a NULL pointer
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
@@ -164,6 +183,8 @@ void UT_auth_login_TC_02()
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
 	CPPTEST_EXPECT_NCALLS("fgets", 1);
 	CPPTEST_EXPECT_NCALLS("hashPin", 1);
+	CPPTEST_EXPECT_NCALLS("malloc", 0);
+	CPPTEST_EXPECT_NCALLS("fclose", 1);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_login_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_login_fgets_00);
 	CPPTEST_REGISTER_STUB_CALLBACK("hashPin", &CppTest_StubCallback_hashPin_00);
@@ -177,18 +198,24 @@ void UT_auth_login_TC_02()
  * The test case checks the behavior of the "login" function when the users file is opened successfully but contains no matching account number.
  *
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer.
- * 2. Stub fgets to return mock data lines but does not contain a matching account number
- * 3. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
- * 4. Call login with an account number (12345) and pin (1234).
+ * 1. Function fopen is stubbed to return a valid file pointer (simulate file exists).
+ * 2. Function fgets is stubbed to return mock data lines sequentially from mock_data containing the target account.
+ * 3. Function malloc is stubbed to return 0
+ * 4. Function hashPin is stubbed to return "dummyHash"
+ * 5. Function fclose is stubbed to return 0
+ * 6. Function login is called with parameters
+ *    *accountNumber = 10023349 and *pinCode = "1234".
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function login returns NULL because no matching account number and PIN are found.
- * 2. hashPin is called with the correct input PIN code.
- * 3. File is opened, read and closed correctly.
- * 4. No account number is matched in the file
+ * 1. File is opened, read, and closed correctly.
+ * 2. Function fopen is called once
+ * 3. Function fgets is called 3 times
+ * 4. Function hashPin is called once
+ * 5. Function malloc is not called
+ * 6. Function fclose is called once
+ * 7. Function login returns a NULL pointer because no account number is matched in the file
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
@@ -198,6 +225,8 @@ void UT_auth_login_TC_03()
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
 	CPPTEST_EXPECT_NCALLS("fgets", 3);
 	CPPTEST_EXPECT_NCALLS("hashPin", 1);
+	CPPTEST_EXPECT_NCALLS("malloc", 0);
+	CPPTEST_EXPECT_NCALLS("fclose", 1);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_login_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_login_fgets_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("hashPin", &CppTest_StubCallback_hashPin_00);
@@ -211,19 +240,24 @@ void UT_auth_login_TC_03()
  * The test case checks the behavior of the "login" function when the account exists in the users file but memory allocation for the Account struct fails.
  *
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer (simulate file exists).
- * 2. Stub fgets to return mock data lines
- * 3. Stub malloc to always return NULL (simulate memory allocation failure).
- * 4. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
- * 5. Call login with account number 10023349 and pin "1234".
+ * 1. Function fopen is stubbed to return a valid file pointer (simulate file exists).
+ * 2. Function fgets is stubbed to return mock data lines
+ * 3. Function malloc is stubbed to return NULL (simulate memory allocation failure).
+ * 4. Function hashPin is stubbed to return "dummyHash"
+ * 5. Function fclose is stubbed to return 0
+ * 6. Function login is called with parameters
+ *    *accountNumber = 10023349 and *pinCode = "1234".
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function login returns NULL because memory allocation failed.
- * 2. hashPin is called with the correct input PIN code.
- * 3. File is opened and closed correctly.
- * 4. No Account struct is created.
+ * 1. File is opened, and closed correctly.
+ * 2. Function fopen is called once
+ * 3. Function fgets is called once
+ * 4. Function hashPin is called once
+ * 5. Function malloc is called once
+ * 6. Function fclose is called once
+ * 7. Function login returns a NULL pointer because memory allocation failed
  * \endfield
  */
 
@@ -235,6 +269,7 @@ void UT_auth_login_TC_04()
 	CPPTEST_EXPECT_NCALLS("fgets", 1);
 	CPPTEST_EXPECT_NCALLS("hashPin", 1);
 	CPPTEST_EXPECT_NCALLS("malloc", 1);
+	CPPTEST_EXPECT_NCALLS("fclose", 1);
 
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_login_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_login_fgets_01);
@@ -250,19 +285,24 @@ void UT_auth_login_TC_04()
  * The test case checks the behavior of the "login" function when the account exists in the users file and memory allocation succeeds.
  *
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer (simulate file exists).
- * 2. Stub fgets to return mock data lines sequentially from mock_data containing the target account.
- * 3. Stub malloc to return a valid pointer (simulate successful memory allocation).
- * 4. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
- * 5. Call login with account number 10023349 and pin "1234".
+ * 1. Function fopen is stubbed to return a valid file pointer (simulate file exists).
+ * 2. Function fgets is stubbed to return mock data lines sequentially from mock_data containing the target account.
+ * 3. Function malloc is stubbed to return a valid pointer (simulate successful memory allocation).
+ * 4. Function hashPin is stubbed to return "dummyHash"
+ * 5. Function fclose is stubbed to return 0
+ * 6. Function login is called with parameters
+ *    *accountNumber = 10023349 and *pinCode = "1234".
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function login returns a non-NULL pointer
- * 2. hashPin is called with the correct input PIN code.
- * 3. File is opened, read, and closed correctly.
- * 4. Account struct contains correct accountNumber
+ * 1. File is opened, read, and closed correctly.
+ * 2. Function fopen is called once
+ * 3. Function fgets is called once
+ * 4. Function hashPin is called once
+ * 5. Function malloc is called once
+ * 6. Function fclose is called once
+ * 7. Function login returns a non-NULL pointer
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_05 */
@@ -273,6 +313,8 @@ void UT_auth_login_TC_05()
 	CPPTEST_EXPECT_NCALLS("fgets", 1);
 	CPPTEST_EXPECT_NCALLS("hashPin", 1);
 	CPPTEST_EXPECT_NCALLS("malloc", 1);
+	CPPTEST_EXPECT_NCALLS("fclose", 1);
+
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_login_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_login_fgets_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("malloc", &CppTest_StubCallback_malloc_01);

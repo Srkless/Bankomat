@@ -63,13 +63,18 @@ void UT_transaction_withdraw_tearDown(void)
  *
  * \field{Test Specification}
  * 1. Define account pointer as NULL.
- * 2. Call withdraw(account, 20).
+ * 2. Function getAccountLimit is stubbed to return 0
+ * 3. Function updateAccountInFile is stubbed to return code STATUS_ERROR with no message
+ * 4. Function withdraw is called with parameter
+ *    *account = NULL and *money = 20
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function withdraw returns STATUS_ACCOUNT_NOT_EXISTS.
- * 2. No balance change occurs.
+* 1. Function getAccountLimit is not called
+ * 2. Function updateAccountInFile is not called
+ * 3. Function withdraw returns STATUS_ACCOUNT_NOT_EXISTS with proper message.
+ * 4. No balance update is performed.
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
@@ -90,15 +95,19 @@ void UT_transaction_withdraw_TC_01()
  * The test case checks the behaviour of the "withdraw" function when the account type is invalid (getAccountLimit returns -1).
  *
  * \field{Test Specification}
- * 1. Stub getAccountLimit to return -1 (invalid account type).
- * 2. Create an Account struct with balance = 0.
- * 3. Call withdraw(&account, 20).
+ * 1. Create an Account struct with balance = 0.
+ * 2. Function getAccountLimit is stubbed to return -1 (invalid account type)
+ * 3. Function updateAccountInFile is stubbed to return code STATUS_ERROR with no message
+ * 4. Function withdraw is called with parameter
+ *    *account = account and *money = 20
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function withdraw returns STATUS_ACCOUNT_TYPE_INVALID.
- * 2. Account balance remains unchanged.
+ * 1. Function getAccountLimit is called once
+ * 2. Function updateAccountInFile is not called
+ * 3. Function withdraw returns STATUS_ACCOUNT_TYPE_INVALID with proper message.
+ * 4. Account balance remains unchanged.
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
@@ -119,15 +128,19 @@ void UT_transaction_withdraw_TC_02()
  * The test case checks the behaviour of the "withdraw" function when the withdrawn amount is below the minimum allowed (less than 10).
  *
  * \field{Test Specification}
- * 1. Stub getAccountLimit to return a valid limit (e.g., 1000).
- * 2. Create an Account struct with balance = 0.
- * 3. Call withdraw(&account, 5).
+  * 1. Create an Account struct with balance = 0 and type Standard
+ * 2. Function getAccountLimit is stubbed to return a valid limit (e.g., 1000)
+ * 3. Function updateAccountInFile is stubbed to return code STATUS_ERROR with no message
+ * 4. Function withdraw is called with parameter
+ *    *account = account and *money = 5
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function withdraw returns STATUS_WRONG_VALUE.
- * 2. Account balance remains unchanged.
+ * 1. Function getAccountLimit is called once
+ * 2. Function updateAccountInFile is not called
+ * 3. Function withdraw returns STATUS_WRONG_VALUE with proper message.
+ * 4. Account balance remains unchanged.
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
@@ -148,15 +161,19 @@ void UT_transaction_withdraw_TC_03()
  * The test case checks the behaviour of the "withdraw" function when the withdrawn amount is not divisible by 10.
  *
  * \field{Test Specification}
- * 1. Stub getAccountLimit to return a valid limit (e.g., 1000).
- * 2. Create an Account struct with balance = 0.
- * 3. Call withdraw(&account, 15).
+ * 1. Create an Account struct with balance = 0 and type Standard
+ * 2. Function getAccountLimit is stubbed to return a valid limit (e.g., 1000)
+ * 3. Function updateAccountInFile is stubbed to return code STATUS_ERROR with no message
+ * 4. Function withdraw is called with parameter
+ *    *account = account and *money = 15
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function withdraw returns STATUS_WRONG_VALUE.
- * 2. Account balance remains unchanged.
+ * 1. Function getAccountLimit is called once
+ * 2. Function updateAccountInFile is not called
+ * 3. Function withdraw returns STATUS_WRONG_VALUE with proper message.
+ * 4. Account balance remains unchanged.
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_04 */
@@ -177,15 +194,19 @@ void UT_transaction_withdraw_TC_04()
  * The test case checks the behaviour of the "withdraw" function when the account does not have enough balance to withdraw the requested amount.
  *
  * \field{Test Specification}
- * 1. Stub getAccountLimit to return a valid limit (e.g., 1000).
- * 2. Create an Account struct with balance = 0.
- * 3. Call withdraw(&account, 20).
+ * 1. Create an Account struct with balance = 0 and type Standard
+ * 2. Function getAccountLimit is stubbed to return a valid limit (e.g., 1000)
+ * 3. Function updateAccountInFile is stubbed to return code STATUS_ERROR with no message
+ * 4. Function withdraw is called with parameter
+ *    *account = account and *money = 20
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function withdraw returns STATUS_INSUFFICIENT_MONEY.
- * 2. Account balance remains unchanged.
+ * 1. Function getAccountLimit is called once
+ * 2. Function updateAccountInFile is not called
+ * 3. Function withdraw returns STATUS_INSUFFICIENT_MONEY with proper message.
+ * 4. Account balance remains unchanged.
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_05 */
@@ -206,16 +227,19 @@ void UT_transaction_withdraw_TC_05()
  * The test case checks the correct behaviour of the "withdraw" function when the withdrawn amount is valid and the account has sufficient balance.
  *
  * \field{Test Specification}
- * 1. Stub getAccountLimit to return a valid limit (e.g., 1000).
- * 2. Stub updateAccountInFile validates that the function is called with the expected parameter values.
- * 3. Create an Account struct with balance = 100.
- * 4. Call withdraw(&account, 50).
+ * 1. Create an Account struct with balance = 100
+ * 2. Function getAccountLimit is stubbed to return a valid limit (e.g., 1000)
+ * 3. Function updateAccountInFile is stubbed to return code STATUS_OK with no message
+ * 4. Function withdraw is called with parameter
+ *    *account = account and *money = 50
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function withdraw returns STATUS_OK.
- * 2. Account balance is decreased correctly (100 - 50 = 50).
+ * 1. Function getAccountLimit is called once
+ * 2. Function updateAccountInFile is called once
+ * 3. Function withdraw returns STATUS_OK with proper message.
+ * 4. Account balance is decreased correctly (1000 - 50 = 50).
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_06 */

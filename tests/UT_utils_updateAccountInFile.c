@@ -162,18 +162,38 @@ void CppTest_StubCallback_strdup_01(CppTest_StubCallInfo* stubCallInfo, char** _
  *
  * \field{Test Specification}
  * 1. Define account pointer as NULL.
- * 2. Call updateAccountInFile(account).
+ * 2. Function fopen to stubbed to return 0.
+ * 3. Function fgets is stubbed to return 0.
+ * 4. Function strcmp is stubbed to return 0.
+ * 5. Function realloc is stubbed to return 0.
+ * 6. Function strdup is stubbed to return 0.
+ * 7. Function fclose is stubbed to return 0, file is successfully closed
+ * 8. Function updateAccountInFile is called with parameter
+ * 	  *account = NULL
+ * 9. Check expected results.
  * \endfield
  *
  * \field{Expected Results}
- * 1. Function returns STATUS_ACCOUNT_NOT_EXISTS.
- * 2. No file operations are performed.
+ * 1. Function fopen is not called
+ * 2. Function fgets is not called
+ * 3. Function strcmp is not called
+ * 4. Function realloc is not called
+ * 5. Function strdup is not called
+ * 6. Function fclose is not called
+ * 7. Function returns STATUS_ACCOUNT_NOT_EXISTS with proper message
+ *
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
 void UT_utils_updateAccountInFile_TC_01()
 {
+	CPPTEST_EXPECT_NCALLS("fopen", 0);
+	CPPTEST_EXPECT_NCALLS("fgets", 0);
+	CPPTEST_EXPECT_NCALLS("strcmp", 0);
+	CPPTEST_EXPECT_NCALLS("realloc", 0);
+	CPPTEST_EXPECT_NCALLS("strdup", 0);
+	CPPTEST_EXPECT_NCALLS("fclose", 0);
 	Account *account = NULL;
 	Status result = updateAccountInFile(account);
 
@@ -186,14 +206,26 @@ void UT_utils_updateAccountInFile_TC_01()
  * The test case checks the behaviour of "updateAccountInFile" when fopen fails to open the file for reading.
  *
  * \field{Test Specification}
- * 1. Stub fopen to return NULL.
- * 2. Create a valid Account struct.
- * 3. Call updateAccountInFile(&account).
+ * 1. Create a valid Account struct.
+ * 2. Function fopen to stubbed to return NULL (simulate error opening file).
+ * 3. Function fgets is stubbed to return 0.
+ * 4. Function strcmp is stubbed to return 0.
+ * 5. Function realloc is stubbed to return 0.
+ * 6. Function strdup is stubbed to return 0.
+ * 7. Function fclose is stubbed to return 0, file is successfully closed
+ * 8. Function updateAccountInFile is called with parameter
+ * 	  *account = account
+ * 9. Check expected results.
  * \endfield
  *
  * \field{Expected Results}
- * 1. Function returns STATUS_FILE_ERROR.
- * 2. No further operations are performed.
+ * 1. Function fopen is called once
+ * 2. Function fgets is not called
+ * 3. Function strcmp is not called
+ * 4. Function realloc is not called
+ * 5. Function strdup is not called
+ * 6. Function fclose is not called
+ * 7. Function returns STATUS_FILE_ERROR with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
@@ -201,6 +233,12 @@ void UT_utils_updateAccountInFile_TC_01()
 void UT_utils_updateAccountInFile_TC_02()
 {
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
+	CPPTEST_EXPECT_NCALLS("fgets", 0);
+	CPPTEST_EXPECT_NCALLS("strcmp", 0);
+	CPPTEST_EXPECT_NCALLS("realloc", 0);
+	CPPTEST_EXPECT_NCALLS("strdup", 0);
+	CPPTEST_EXPECT_NCALLS("fclose", 0);
+
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_00);
 	Account account = {
 				.accountNumber = 1234,
@@ -218,15 +256,26 @@ void UT_utils_updateAccountInFile_TC_02()
  * The test case checks the behaviour of "updateAccountInFile" when the file is empty (fgets returns 0).
  *
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer.
- * 2. Stub fgets to return NULL.
- * 3. Create a valid Account struct.
- * 4. Call updateAccountInFile(&account).
+ * 1. Create a valid Account struct.
+ * 2. Function fopen to stubbed to return a valid file pointer.
+ * 3. Function fgets is stubbed to return 0.
+ * 4. Function strcmp is stubbed to return 0.
+ * 5. Function realloc is stubbed to return 0.
+ * 6. Function strdup is stubbed to return 0.
+ * 7. Function fclose is stubbed to return 0, file is successfully closed
+ * 8. Function updateAccountInFile is called with parameter
+ * 	  *account = account
+ * 9. Check expected results.
  * \endfield
  *
  * \field{Expected Results}
- * 1. Function returns STATUS_ACCOUNT_NOT_EXISTS.
- * 2. No account update occurs.
+ * 1. Function fopen is called twice
+ * 2. Function fgets is called once
+ * 3. Function strcmp is not called
+ * 4. Function realloc is not called
+ * 5. Function strdup is not called
+ * 6. Function fclose is called twice
+ * 7. Function returns STATUS_ACCOUNT_NOT_EXISTS with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_03 */
@@ -235,8 +284,12 @@ void UT_utils_updateAccountInFile_TC_03()
 {
 	CPPTEST_EXPECT_NCALLS("fopen", 2);
 	CPPTEST_EXPECT_NCALLS("fgets", 1);
+	CPPTEST_EXPECT_NCALLS("strcmp", 0);
+	CPPTEST_EXPECT_NCALLS("realloc", 0);
+	CPPTEST_EXPECT_NCALLS("strdup", 0);
+	CPPTEST_EXPECT_NCALLS("fclose", 2);
+
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
-	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_00);
 	Account account = {
 				.accountNumber = 1234,
 				.pinHash = "1234",
@@ -253,16 +306,26 @@ void UT_utils_updateAccountInFile_TC_03()
  * The test case checks the behaviour of "updateAccountInFile" when the file has content but the account number is not found.
  *
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer.
- * 2. Stub fgets to return mock data.
- * 3. Stub strcmp to return non-zero (no match).
- * 4. Stub realloc to fail (return NULL).
- * 5. Call updateAccountInFile(&account).
+ * 1. Create a valid Account struct.
+ * 2. Function fopen to stubbed to return a valid file pointer.
+ * 3. Function fgets is stubbed to return mock data.
+ * 4. Function strcmp is stubbed to return 1 (no match).
+ * 5. Function realloc is stubbed to return NULL (fail).
+ * 6. Function strdup is stubbed to return 0.
+ * 7. Function fclose is stubbed to return 0, file is successfully closed
+ * 8. Function updateAccountInFile is called with parameter
+ * 	  *account = account
+ * 9. Check expected results.
  * \endfield
  *
  * \field{Expected Results}
- * 1. Function returns STATUS_ERROR due to realloc failure.
- * 2. No changes are written to file.
+ * 1. Function fopen is called once
+ * 2. Function fgets is called once
+ * 3. Function strcmp is called once
+ * 4. Function realloc is called once
+ * 5. Function strdup is not called
+ * 6. Function fclose is not called
+ * 7. Function returns STATUS_ERROR with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_04 */
@@ -273,6 +336,9 @@ void UT_utils_updateAccountInFile_TC_04()
 	CPPTEST_EXPECT_NCALLS("fgets", 1);
 	CPPTEST_EXPECT_NCALLS("strcmp", 1);
 	CPPTEST_EXPECT_NCALLS("realloc", 1);
+	CPPTEST_EXPECT_NCALLS("strdup", 0);
+	CPPTEST_EXPECT_NCALLS("fclose", 0);
+
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("strcmp", &CppTest_StubCallback_strcmp_01);
@@ -294,17 +360,26 @@ void UT_utils_updateAccountInFile_TC_04()
  * The test case checks the behaviour of "updateAccountInFile" when realloc succeeds but strdup fails.
  *
  * \field{Test Specification}
- * 1. Stub fopen to return valid pointer.
- * 2. Stub fgets to return mock data.
- * 3. Stub strcmp to return non-zero (no match).
- * 4. Stub realloc to succeed.
- * 5. Stub strdup to return NULL.
- * 6. Call updateAccountInFile(&account).
+ * 1. Create a valid Account struct.
+ * 2. Function fopen to stubbed to return a valid file pointer.
+ * 3. Function fgets is stubbed to return mock data.
+ * 4. Function strcmp is stubbed to return 1 (no match).
+ * 5. Function realloc is stubbed to return pointer to the reallocated memory block.
+ * 6. Function strdup is stubbed to return NULL.
+ * 7. Function fclose is stubbed to return 0, file is successfully closed
+ * 8. Function updateAccountInFile is called with parameter
+ * 	  *account = account
+ * 9. Check expected results.
  * \endfield
  *
  * \field{Expected Results}
- * 1. Function returns STATUS_ERROR due to strdup failure.
- * 2. No changes are written to file.
+ * 1. Function fopen is called once
+ * 2. Function fgets is called once
+ * 3. Function strcmp is called once
+ * 4. Function realloc is called once
+ * 5. Function strdup is called once
+ * 6. Function fclose is not called
+ * 7. Function returns STATUS_ERROR with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_05 */
@@ -315,6 +390,8 @@ void UT_utils_updateAccountInFile_TC_05()
 	CPPTEST_EXPECT_NCALLS("fgets", 1);
 	CPPTEST_EXPECT_NCALLS("strcmp", 1);
 	CPPTEST_EXPECT_NCALLS("realloc", 1);
+	CPPTEST_EXPECT_NCALLS("strdup", 1);
+	CPPTEST_EXPECT_NCALLS("fclose", 0);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("strcmp", &CppTest_StubCallback_strcmp_01);
@@ -337,14 +414,26 @@ void UT_utils_updateAccountInFile_TC_05()
  * The test case checks the behaviour of "updateAccountInFile" when fopen fails to open the file for writing.
  *
  * \field{Test Specification}
- * 1. Stub fopen to succeed for reading but fail for writing.
- * 2. Stub fgets, strcmp, realloc to succeed.
- * 3. Call updateAccountInFile(&account).
+ * 1. Create a valid Account struct.
+ * 2. Function fopen to stubbed to return a valid file pointer for reading but NULL for writing
+ * 3. Function fgets is stubbed to return mock data.
+ * 4. Function strcmp is stubbed to return 1 (no match).
+ * 5. Function realloc is stubbed to return pointer to the reallocated memory block.
+ * 6. Function strdup is stubbed to return 0.
+ * 7. Function fclose is stubbed to return 0, file is successfully closed
+ * 8. Function updateAccountInFile is called with parameter
+ * 	  *account = account
+ * 9. Check expected results.
  * \endfield
  *
  * \field{Expected Results}
- * 1. Function returns STATUS_FILE_ERROR.
- * 2. Account data is not updated in file.
+ * 1. Function fopen is called twice
+ * 2. Function fgets is called 3 times
+ * 3. Function strcmp is called twice
+ * 4. Function realloc is called twice
+ * 5. Function strdup is called twice
+ * 6. Function fclose is not called
+ * 7. Function returns STATUS_FILE_ERROR with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_06 */
@@ -355,6 +444,8 @@ void UT_utils_updateAccountInFile_TC_06()
 	CPPTEST_EXPECT_NCALLS("fgets", 3);
 	CPPTEST_EXPECT_NCALLS("strcmp", 2);
 	CPPTEST_EXPECT_NCALLS("realloc", 2);
+	CPPTEST_EXPECT_NCALLS("strdup", 2);
+	CPPTEST_EXPECT_NCALLS("fclose", 1);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_02);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("strcmp", &CppTest_StubCallback_strcmp_01);
@@ -376,15 +467,28 @@ void UT_utils_updateAccountInFile_TC_06()
  * The test case checks the behaviour of "updateAccountInFile" when the account is found and balance is updated in memory, but file writing is not verified.
  *
  * \field{Test Specification}
- * 1. Stub fopen, fgets, strcmp, realloc to succeed.
- * 2. Stub strcmp to simulate account not found (non-zero).
- * 3. Call updateAccountInFile(&account).
+ * 1. Create a valid Account struct.
+ * 2. Function fopen to stubbed to return a valid file pointer
+ * 3. Function fgets is stubbed to return mock data.
+ * 4. Function strcmp is stubbed to return 1 (no match).
+ * 5. Function realloc is stubbed to return pointer to the reallocated memory block.
+ * 6. Function strdup is stubbed to return 0.
+ * 7. Function fclose is stubbed to return 0, file is successfully closed
+ * 8. Function updateAccountInFile is called with parameter
+ * 	  *account = account
+ * 9. Check expected results.
  * \endfield
  *
  * \field{Expected Results}
- * 1. Function returns STATUS_ACCOUNT_NOT_EXISTS.
- * 2. BalanceUpdated flag remains 0; no actual update confirmed.
+ * 1. Function fopen is called twice
+ * 2. Function fgets is called 3 times
+ * 3. Function strcmp is called twice
+ * 4. Function realloc is called twice
+ * 5. Function strdup is called twice
+ * 6. Function fclose is not called
+ * 7. Function returns STATUS_ACCOUNT_NOT_EXISTS with proper message
  * \endfield
+
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_07 */
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
@@ -394,6 +498,8 @@ void UT_utils_updateAccountInFile_TC_07()
 	CPPTEST_EXPECT_NCALLS("fgets", 3);
 	CPPTEST_EXPECT_NCALLS("strcmp", 2);
 	CPPTEST_EXPECT_NCALLS("realloc", 2);
+	CPPTEST_EXPECT_NCALLS("strdup", 2);
+	CPPTEST_EXPECT_NCALLS("fclose", 2);
 
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);
@@ -416,15 +522,28 @@ void UT_utils_updateAccountInFile_TC_07()
  * The test case checks the correct behaviour of "updateAccountInFile" when the account is found and successfully updated in the file.
  *
  * \field{Test Specification}
- * 1. Stub fopen, fgets, strcmp, realloc, strdup to succeed.
- * 2. Stub strcmp to match the account number (return 0).
- * 3. Call updateAccountInFile(&account).
+ * 1. Create a valid Account struct.
+ * 2. Function fopen to stubbed to return a valid file pointer
+ * 3. Function fgets is stubbed to return mock data.
+ * 4. Function strcmp is stubbed to return 0 (match).
+ * 5. Function realloc is stubbed to return pointer to the reallocated memory block.
+ * 6. Function strdup is stubbed to return a copy of string
+ * 7. Function fclose is stubbed to return 0, file is successfully closed
+ * 8. Function updateAccountInFile is called with parameter
+ * 	  *account = account
+ * 9. Check expected results.
  * \endfield
  *
  * \field{Expected Results}
- * 1. Function returns STATUS_OK.
- * 2. Account balance and data are successfully updated in the file.
+ * 1. Function fopen is called twice
+ * 2. Function fgets is called 3 times
+ * 3. Function strcmp is called twice
+ * 4. Function realloc is called twice
+ * 5. Function strdup is called once
+ * 6. Function fclose is not twice
+ * 7. Function returns STATUS_OK with proper message
  * \endfield
+
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_08 */
 /* CPPTEST_TEST_CASE_CONTEXT Status updateAccountInFile(Account*) */
@@ -435,6 +554,7 @@ void UT_utils_updateAccountInFile_TC_08()
 	CPPTEST_EXPECT_NCALLS("strcmp", 2);
 	CPPTEST_EXPECT_NCALLS("realloc", 2);
 	CPPTEST_EXPECT_NCALLS("strdup", 2);
+	CPPTEST_EXPECT_NCALLS("fclose", 2);
 
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_updateAccountInFile_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("fgets", &CppTest_StubCallback_updateAccountInFile_fgets_01);

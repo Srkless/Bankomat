@@ -56,14 +56,13 @@ void UT_security_validatePin_tearDown(void)
  * The test case checks the correct behavior of the "validatePin" function when the provided PIN has invalid length (not exactly 4 digits).
  *
  * \field{Test Specification}
- * 1. Define a temporary PIN string: "123456" (6 characters).
- * 2. Allocate a pinBuffer of size 5 to store the validated PIN.
- * 3. Call validatePin with pinBuffer and the temporary PIN.
+ * 1. Allocate a pinBuffer of size 5 to store the validated PIN.
+ * 2. Call validatePin with pinBuffer and the pin which is equal "123456".
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function validatePin returns STATUS_PIN_INVALID.
+ * 1. Function validatePin returns code STATUS_PIN_INVALID with proper message
  * 2. The pinBuffer remains empty (""), since validation failed.
  * \endfield
  */
@@ -83,14 +82,13 @@ void UT_security_validatePin_TC_01()
  * The test case checks the correct behavior of the "validatePin" function when the provided PIN has invalid length (not exactly 4 digits).
  *
  * \field{Test Specification}
- * 1. Define a temporary PIN string: "123" (3 characters).
  * 2. Allocate a pinBuffer of size 5 to store the validated PIN.
- * 3. Call validatePin with pinBuffer and the temporary PIN.
+ * 3. Call validatePin with pinBuffer and the pin which is equal "123".
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function validatePin returns STATUS_PIN_INVALID.
+ * 1. Function validatePin returns STATUS_PIN_INVALID with proper message
  * 2. The pinBuffer remains empty (""), since validation failed.
  * \endfield
  */
@@ -110,14 +108,13 @@ void UT_security_validatePin_TC_02()
  * The test case checks the correct behavior of the "validatePin" function when the provided PIN contains non-digit characters.
  *
  * \field{Test Specification}
- * 1. Define a temporary PIN string: "1fg2" (4 characters, but includes non-digit chars).
  * 2. Allocate a pinBuffer of size 5 to store the validated PIN.
- * 3. Call validatePin with pinBuffer and the temporary PIN.
+ * 3. Call validatePin with pinBuffer and the pin which is equal "1fg2".
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function validatePin returns STATUS_PIN_INVALID.
+ * 1. Function validatePin returns STATUS_PIN_INVALID with proper message
  * 2. The pinBuffer remains empty (""), since validation failed.
  * \endfield
  */
@@ -137,14 +134,13 @@ void UT_security_validatePin_TC_03()
  * The test case checks the correct behaviour of the "validatePin" function when the provided PIN is valid (exactly 4 digits).
  *
  * \field{Test Specification}
- * 1. Define a temporary PIN string: "1234" (4 digits).
  * 2. Allocate a pinBuffer of size 5 to store the validated PIN.
- * 3. Call validatePin with pinBuffer and the temporary PIN.
+ * 3. Call validatePin with pinBuffer and the pin which is equal "1234".
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function validatePin returns STATUS_OK.
+ * 1. Function validatePin returns STATUS_OK with proper message
  * 3. The pinBuffer contains the validated PIN: "1234".
  * \endfield
  */

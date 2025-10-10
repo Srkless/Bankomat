@@ -108,7 +108,7 @@ void CppTest_StubCallback_atoi(CppTest_StubCallInfo* stubCallInfo, int* __return
  * The test case checks the behavior of the "isAccountExists" function when the users file cannot be opened.
  *
  * \field{Test Specification}
- * 1. Stub fopen to always return NULL (simulate error opening file).
+ * 1. Function fopen to always return NULL (simulate error opening file).
  * 2. Function fgets is stubbed to return 0.
  * 3. Function atoi is stubbed to return 0.
  * 4. Function fclose is stubbed to return 0, file is successfully closed

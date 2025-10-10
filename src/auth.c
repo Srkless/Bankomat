@@ -15,6 +15,7 @@ Status registration(int number, char pin[5], int accountTypeOption) {
 		strcpy(result.message, "Greska pri citanju iz fajla.\n");
 		return result;
     }
+
     Account newAccount;
     newAccount.accountNumber = number;
 

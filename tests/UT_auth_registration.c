@@ -64,18 +64,33 @@ void CppTest_StubCallback_registration_fopen_01(CppTest_StubCallInfo* stubCallIn
 	*__return = fp;
 }
 
+#ifndef CPPTEST_STUB_HASH_PIN_DEFINED
+#define CPPTEST_STUB_HASH_PIN_DEFINED
+void CppTest_StubCallback_hashPin_00(CppTest_StubCallInfo* stubCallInfo, const char* pinCode, const char* hash){
+	CPPTEST_ASSERT_EQUAL("1234", pinCode);
+	strcpy(hash, "dummyHash");
+}
+#endif
+
+
 /**
  * The test case checks the behavior of the "register" function when the users file cannot be opened.
  * \field{Test Specification}
- * 1. Stub fopen to return a NULL (simulate error opening file).
- * 2. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
- * 3. Call register with account number 1234, pin "1234" and account type 1 (Standard).
+ * 1. Function fopen is stubbed to return a NULL (simulate error opening file).
+ * 2. Function hashPin is stubbed to return "dummyHash"
+ * 3. Function fclose is stubbed to return 0, file is successfully closed
+ * 4. Function fprintf is stubbed to return 0
+ * 5. Function register is called with parameters
+ *    *number = 1234, *pin = "1234", *accountType = 1 (Standard)
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function register returns STATUS_FILE_ERROR
- * 2. hashPin is called with the correct input PIN code.
+ * 1. Function fopen is called once
+ * 2. Function hashPin is not called
+ * 3. Function fclose is not called
+ * 4. Function fprintf is not called
+ * 5. Function registration returns code which is equal STATUS_FILE_ERROR with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_01 */
@@ -85,6 +100,7 @@ void UT_auth_registration_TC_01()
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
 	CPPTEST_EXPECT_NCALLS("hashPin", 0);
 	CPPTEST_EXPECT_NCALLS("fclose", 0);
+	CPPTEST_EXPECT_NCALLS("fprintf", 0);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_00);
 	Status result = registration(1234, "1234", 1);
 
@@ -99,15 +115,21 @@ void UT_auth_registration_TC_01()
 /**
  * The test case checks the behavior of the "register" function when the users file is opened successfully.
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer
- * 2. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
- * 3. Call register with account number 1234, pin "1234" and account type 1 (Standard).
+ * 1. Function fopen is stubbed to return a valid file pointer
+ * 2. Function hashPin is stubbed to return "dummyHash"
+ * 3. Function fclose is stubbed to return 0, file is successfully closed
+ * 4. Function fprintf is stubbed to return 0
+ * 5. Function register is called with parameters
+ *    *number = 1234, *pin = "1234", *accountType = 1 (Standard)
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function register returns STATUS_OK
- * 2. hashPin is called with the correct input PIN code.
+ * 1. Function fopen is called once
+ * 2. Function hashPin is called once
+ * 3. Function fclose is called once
+ * 4. Function fprintf is called once
+ * 5. Function registration returns code which is equal STATUS_OK with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_BEGIN TC_02 */
@@ -117,6 +139,7 @@ void UT_auth_registration_TC_02()
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
 	CPPTEST_EXPECT_NCALLS("hashPin", 1);
 	CPPTEST_EXPECT_NCALLS("fclose", 1);
+	CPPTEST_EXPECT_NCALLS("fprintf", 1);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("hashPin", &CppTest_StubCallback_hashPin_00);
 	Status result = registration(1234, "1234", 1);
@@ -130,15 +153,21 @@ void UT_auth_registration_TC_02()
 /**
  * The test case checks the behavior of the "register" function when the users file is opened successfully.
  * \field{Test Specification}
- * 1. Stub fopen to return a valid file pointer
- * 2. Stub hashPin to intercept the call and provide a dummy hash; also verifies the input PIN code.
- * 3. Call register with account number 1234, pin "1234" and account type 2 (Premium).
+ * 1. Function fopen is stubbed to return a valid file pointer
+ * 2. Function hashPin is stubbed to return "dummyHash"
+ * 3. Function fclose is stubbed to return 0, file is successfully closed
+ * 4. Function fprintf is stubbed to return 0
+ * 5. Function register is called with parameters
+ *    *number = 1234, *pin = "1234", *accountType = 2 (Premium)
  * \endfield
  *
  * \field{Expected Results}
  * Expected result is Passed:
- * 1. Function register returns STATUS_OK
- * 2. hashPin is called with the correct input PIN code.
+ * 1. Function fopen is called once
+ * 2. Function hashPin is called once
+ * 3. Function fclose is called once
+ * 4. Function fprintf is called once
+ * 5. Function registration returns code which is equal STATUS_OK with proper message
  * \endfield
  */
 /* CPPTEST_TEST_CASE_CONTEXT Status registration(int, char*, int) */
@@ -147,6 +176,7 @@ void UT_auth_registration_TC_03()
 	CPPTEST_EXPECT_NCALLS("fopen", 1);
 	CPPTEST_EXPECT_NCALLS("hashPin", 1);
 	CPPTEST_EXPECT_NCALLS("fclose", 1);
+	CPPTEST_EXPECT_NCALLS("fprintf", 1);
 	CPPTEST_REGISTER_STUB_CALLBACK("fopen", &CppTest_StubCallback_registration_fopen_01);
 	CPPTEST_REGISTER_STUB_CALLBACK("hashPin", &CppTest_StubCallback_hashPin_00);
 	Status result = registration(1234, "1234", 2);

@@ -56,7 +56,8 @@ void UT_utils_getAccountLimit_tearDown(void)
  *
  * \field{Test Specification}
  * 1. Define AccountType as STANDARD.
- * 2. Call getAccountLimit(type).
+ * 2. Function getAccountLimit is called with parameter
+ *    *type = Standard.
  * \endfield
  *
  * \field{Expected Results}
@@ -80,7 +81,8 @@ void UT_utils_getAccountLimit_TC_01()
  *
  * \field{Test Specification}
  * 1. Define AccountType as PREMIUM.
- * 2. Call getAccountLimit(type).
+ * 2. Function getAccountLimit is called with parameter
+ *    *type = Premium.
  * \endfield
  *
  * \field{Expected Results}
@@ -103,7 +105,8 @@ void UT_utils_getAccountLimit_TC_02()
  *
  * \field{Test Specification}
  * 1. Define AccountType as an invalid value (e.g., 3).
- * 2. Call getAccountLimit(type).
+  * 2. Function getAccountLimit is called with parameter
+ *    *type = 3 (Unknown).
  * \endfield
  *
  * \field{Expected Results}

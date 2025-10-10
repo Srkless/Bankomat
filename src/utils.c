@@ -39,7 +39,7 @@ Status updateAccountInFile(Account *account) {
     char **lines = NULL;
     int count = 0;
     char buffer[256];
-    int oldBalance = -1;   // zapamti staru vrijednost balansa
+    int oldBalance = -1;
     int balanceUpdated = 0;
 
     char accNumStr[20];
